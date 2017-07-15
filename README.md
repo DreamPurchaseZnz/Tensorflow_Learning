@@ -71,6 +71,9 @@ tf.get_collection_ref(key)
 ```
 About Key is the GraphKeys class which contains many standard names for collections. You can use various preset names to collect and retrive values with a graph.Standard keys are defined as following:
 ```
+key = tf.GraphKeys.TRAINABLE_VARIABLES
+```
+```
 GLOBAL_VARIABLES                   --->  Shared across distributed environment
 LOCAL_VARIABLES                    --->  Variable objects that are local to each machine 
 MODEL_VARIABLES                    --->  Model for inference
