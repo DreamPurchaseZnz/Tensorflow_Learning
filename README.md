@@ -118,11 +118,26 @@ apply_gradients
 compute_gradients
 minimize             ---> Add operation to minimize loss by updating var_list
 ```
+Maybe, Gradients are just unreasonable,so it comes to gradient clipping  
+## Gradient Clipping
+Gradient clipping ,several operations provided by tensorflow, is used to add clipping function to your graph.Those method can particularly useful for exploding or vanishing gradient.
+```
+tf.clip_by_value           --->  Clips tensor to specified min and max
+tf.clip_by_norm            --->  Clips tensor values to a maximum L2-norm     t= t * clip_norm / l2norm(t)
+tf.clip_by_average_norm    --->  Clips tensor values to a maximum average L2-norm
+tf.clip_by_global_norm     --->  Clips values of multiple tensors by the ratio of the sum of their norms.
+tf.global_norm             --->  Computes the global norm of multiple tensors.
+```
+Global norm can be written like this:
+```
+global_norm = sqrt(sum([l2norm(t)**2 for t in t_list]))
+```
 
 
 
 
 
+---------------------------------------------------------------------------------------------------
 ## Use Tensorboard:
 
 In the command windows
