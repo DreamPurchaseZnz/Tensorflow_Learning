@@ -60,7 +60,7 @@ tf.contrib.layers.summarize_collection        --->  Summarize a graph collection
 ```
 
 -------------------------------------------------------------------------------------------------------
-ABOVE THE FUNCTION LAYERS USED FOR GRAPH BUILDING
+                             ABOVE THE FUNCTION LAYERS USED FOR GRAPH BUILDING  
 
 -------------------------------------------------------------------------------------------------------
 
@@ -92,10 +92,10 @@ BIASES:
 ACTIVATIONS: 
 ```
 
-----------------------------------------------------------------------------------------------
-SINCE WE HAVE TRAINABLE VARIABLE WE CAN USE IT TO OPTIMIZE LOSS
+----------------------------------------------------------------------------------------------------------
+                               SINCE WE HAVE TRAINABLE VARIABLE WE CAN USE IT TO OPTIMIZE LOSS
+----------------------------------------------------------------------------------------------------------
 
-----------------------------------------------------------------------------------------------
 ## Optimizers
 The optimizers provides methods to compute gradients for a loss and apply gradient to variables
 ```
