@@ -59,9 +59,11 @@ tf.contrib.layers.summarize_tensors           --->  Summarize a set of tensors
 tf.contrib.layers.summarize_collection        --->  Summarize a graph collection of tensors, possibly filtered by name
 ```
 
-
+-------------------------------------------------------------------------------------------------------
+ABOVE THE FUNCTION LAYERS USED FOR GRAPH BUILDING
 
 -------------------------------------------------------------------------------------------------------
+
 ## Graph collection
 Graph collection is used for collect parameters from specific graph
 ```
@@ -89,6 +91,34 @@ WEIGHTS:
 BIASES:
 ACTIVATIONS: 
 ```
+
+----------------------------------------------------------------------------------------------
+SINCE WE HAVE TRAINABLE VARIABLE WE CAN USE IT TO OPTIMIZE LOSS
+
+----------------------------------------------------------------------------------------------
+## Optimizers
+The optimizers provides methods to compute gradients for a loss and apply gradient to variables
+```
+tf.train.Optimizer
+tf.train.GradientDescentOptimizer
+tf.train.AdadeltaOptimizer
+tf.train.AdagradOptimizer
+tf.train.AdagradDAOptimizer
+tf.train.MomentumOptimizer
+tf.train.AdamOptimizer
+tf.train.FtrlOptimizer
+tf.train.ProximalGradientDescentOptimizer
+tf.train.ProximalAdagradOptimizer
+tf.train.RMSPropOptimizer
+```
+Above Optimizers is class type , which have several method
+```
+__init__             ---> Construct a new optimizer
+apply_gradients      
+compute_gradients
+minimize             ---> Add operation to minimize loss by updating var_list
+```
+
 
 
 
