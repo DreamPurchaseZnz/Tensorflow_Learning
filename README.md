@@ -1,4 +1,7 @@
-# Tensorflow 
+# Tensorflow
+A TensorFlow computation, represented as a dataflow graph.
+
+A Graph contains a set of tf.Operation objects, which represent units of computation; and tf.Tensor objects, which represent the units of data that flow between operations.
 --------------------------------------------------------------------------------------------------------------
 ## Higher level ops for building neural network layers
 ```
@@ -132,11 +135,49 @@ Global norm can be written like this:
 ```
 global_norm = sqrt(sum([l2norm(t)**2 for t in t_list]))
 ```
+## Control dependences
+Once talking about control dependences ,we are entering into the most complex domain -class **tf.Graph**.Let's just briefly introduce it:
+```
+Properties
+  building_function
+  finalized
+  graph_def_versions
+  seed
+  version
+  
+Methods
+  __init__
+  add_to_collection
+  clear_collection                   --->  Clears all values in a collection.
+  container                          --->  Returns a context manager that specifies the resource container to use.
+  control_dependencies               --->  Returns a context manager that specifies control dependencies.See examples in tensorflow
+  device                             --->  Returns a context manager that specifies the default device to use
+  finalize                           --->  Finalizes this graph, making it read-only.
+  get_all_collection_keys            --->  Returns a list of collections used in this graph
+  get_collection                     --->  Returns a list of values in the collection with the given name
+  get_collection_ref
+  get_name_scope                     --->  Returns the current name scope
+  get_operation_by_name              --->  Returns the Operation with the given name
+  get_operations                     --->  Return the list of operations in the graph
+  get_tensor_by_name
+  gradient_override_map
+  is_feedable
+  is_fetchable
+  name_scope                         --->  Returns a context manager that creates hierarchical names for operations.
+  prevent_feeding                    --->  Marks the given tensor as unfeedable in this graph
+  prevent_fetching                   --->  Marks the given op as unfetchable in this graph
+  unique_name
+```
+As for control dependence we can explain it as following example:
+```
+with g.control_dependencies([a, b]):
+  # Ops constructed here run after `a` and `b`.
+  with g.control_dependencies([c, d]):
+    # Ops constructed here run after `a`, `b`, `c`, and `d`.
 
-
-
-
-
+```
+In this case,a new Operation will have control dependencies on the union of control_inputs from all active contexts
+So What is the point of doing this? obviously, it's used to control computation order. for example ,only you updata gradient can you clip it.  
 ---------------------------------------------------------------------------------------------------
 ## Use Tensorboard:
 
