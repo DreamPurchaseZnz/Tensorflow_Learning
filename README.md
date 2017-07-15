@@ -1,8 +1,6 @@
 Tensorflow
 ---------------------------------------------------------------
-A TensorFlow computation, represented as a dataflow graph.
-
-A Graph contains a set of tf.Operation objects, which represent units of computation; and tf.Tensor objects, which represent the units of data that flow between operations.
+A TensorFlow computation, represented as a dataflow graph.A Graph contains a set of tf.Operation objects, which represent units of computation; and tf.Tensor objects, which represent the units of data that flow between operations.
 
 --------------------------------------------------------------------------------------------------------------
 ## Higher level ops for building neural network layers
@@ -137,7 +135,7 @@ Global norm can be written like this:
 ```
 global_norm = sqrt(sum([l2norm(t)**2 for t in t_list]))
 ```
-## Control dependences
+## Control dependences & tf.Graph
 Once talking about control dependences ,we are entering into the most complex domain -class **tf.Graph**.Let's just briefly introduce it:
 ```
 Properties
@@ -182,9 +180,30 @@ In this case,a new Operation will have control dependencies on the union of cont
 So What is the point of doing this? obviously, it's used to control computation order. for example ,only you updata gradient can you clip it.  
 
 ---------------------------------------------------------------------------------------------------
-## Use Tensorboard:
+## Summary Operations
+Tensor summaries for exporting information about a model. There are some functions can be used:
+```
+audio                    --->  Outputs a Summary protocol buffer with audio(Protocol buffers are Google's language-neutral, platform-                                  neutral, extensible mechanism for serializing structured data )
+get_summary_description  --->  When a Summary op is instantiated, a SummaryDescription of associated metadata is stored in its NodeDef
+histogram                --->  Adding a histogram summary makes it possible to visualize your data's distribution in TensorBoard
+image                    --->  Adding a image summary
+merge                    --->  Merges summaries
+merge-all                --->  Merges all summaries collected in the default graph-key=tf.GraphKeys.SUMMARIES
+scalar                   --->  A single scalar value.
+tensor_summary           
+text                     --->  textual data
+```
+Then, you can just run the merged summary op, which will generate a serialized Summary protobuf object with all of your summary data at a given step. Finally, to write this summary data to disk, pass the summary protobuf to a 
+```
+tf.summary.FileWriter
+```
 
-In the command windows
+Now that you've modified your graph and have a FileWriter, you're ready to start running your network! If you want, you could run the merged summary op every single step, and record a ton of training data. That's likely to be more data than you need, though. Instead, consider running the merged summary op every n steps.
+
+## Tensorboard:
+The computations you'll use TensorFlow for - like training a massive deep neural network - can be complex and confusing. To make it easier to understand, debug, and optimize TensorFlow programs, we've included a suite of visualization tools called TensorBoard.
+
+Launching TensorBoard-in the command windows
 ```
 tensorboard --logdir=Path to your folder where your file is.
 ```
