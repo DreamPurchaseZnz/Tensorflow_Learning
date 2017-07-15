@@ -197,7 +197,19 @@ Then, you can just run the merged summary op, which will generate a serialized S
 ```
 tf.summary.FileWriter
 ```
-
+Methods:
+```
+add_event
+add_graph
+add_meta_graph           --->  Adds a MetaGraphDef to the event file.
+add_run_metadata
+add_session_log
+add_summary              --->  Adds a Summary protocol buffer to the event file
+close                    --->  Call this method when you do not need the summary writer anymore
+flush
+get_logdir
+reopen                   --->  can be called after close() to add more events in the same directory. The events will go into a new                                events file
+```
 Now that you've modified your graph and have a FileWriter, you're ready to start running your network! If you want, you could run the merged summary op every single step, and record a ton of training data. That's likely to be more data than you need, though. Instead, consider running the merged summary op every n steps.
 
 ## Tensorboard:
