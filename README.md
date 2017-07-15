@@ -193,7 +193,7 @@ scalar                   --->  A single scalar value.
 tensor_summary           
 text                     --->  textual data
 ```
-Then, you can just run the merged summary op, which will generate a serialized Summary protobuf object with all of your summary data at a given step. Finally, to write this summary data to disk, pass the summary protobuf to a 
+Then, you can just run the merged summary op, which will generate a serialized Summary protobuf object with all of your summary data at a given step. Finally, to write this summary data to disk, pass the summary protobuf to： 
 ```
 tf.summary.FileWriter
 ```
@@ -209,8 +209,25 @@ tensorboard --logdir=Path to your folder where your file is.
 ```
 if you can not open http://0.0.0.0:6006, you can try  **http:localhost:6006**
 
+## tf.train.Saver
+The Saver class adds ops to save and restore checkpoints,which is a binary files in a propriotary format that map variable names to tensor values.
+```
+Properties:
+  last_checkpoints                      --->  A list of checkpoint filenames, sorted from oldest to newest
+  
+```
+Methods as following:
+```
+__init__
+as_saver_def                           --->  Generates a SaverDef representation of this save
+build                                  --->  Proto
+export_meta_graph
+from_proto
+recover_last_checkpoints               --->  Recovers the internal saver state after a crash.
+restore                                --->  Restore previously saved variables ,It requires a session in which the graph was launched.                                              The variables to restore do not have to have been initialized, as restoring is itself a                                                way to initialize variables.
+save                                   --->  Save variables,it requires a session in which graph was launched and variables was                                                      initialized
+set_last_checkpoints_with_time         --->  Sets the list of old checkpoint filenames and timestamps
+to_proto
 
-
-
-
+```
 
