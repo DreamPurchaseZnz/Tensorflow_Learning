@@ -1,8 +1,6 @@
 # Tensorflow 
 --------------------------------------------------------------------------------------------------------------
-## Layers (contrib)
-## Tensorboard Ops
-Higher level ops for building neural network layers:
+## Higher level ops for building neural network layers
 ```
 tf.contrib.layers.avg_pool2d 
 tf.contrib.layers.max_pool2d
@@ -20,8 +18,8 @@ tf.contrib.layers.linear
 tf.contrib.layers.one_hot_encoding
 tf.nn.relu
 tf.nn.relu6                                    --->  Computes Rectified Linear 6: min(max(features, 0), 6).features belong to [0,6]
-tf.contrib.layers.repeat                       --->  Applies **the** same layer with the same arguments repeated
-tf.nn.separable_conv2d                         --->  2-D convolution with **separable** filters
+tf.contrib.layers.repeat                       --->  Applies the same layer with the same arguments repeated
+tf.nn.separable_conv2d                         --->  2-D convolution with separable filters
 tf.contrib.layers.separable_convolution2d      --->  Breifly written
 tf.nn.softmax
 tf.stack                                       --->  Stacks a list of rank-R tensors into one rank-(R+1) tensor
