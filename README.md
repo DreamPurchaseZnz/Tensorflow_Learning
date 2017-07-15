@@ -180,6 +180,7 @@ with g.control_dependencies([a, b]):
 ```
 In this case,a new Operation will have control dependencies on the union of control_inputs from all active contexts
 So What is the point of doing this? obviously, it's used to control computation order. for example ,only you updata gradient can you clip it.  
+
 ---------------------------------------------------------------------------------------------------
 ## Use Tensorboard:
 
