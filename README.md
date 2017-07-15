@@ -1,15 +1,6 @@
 # Tensorflow 
--------------------------------------------------------------------------------------------------------
-## Use Tensorboard:
-
-In the command windows
-```
-tensorboard --logdir=Path to your folder where your file is.
-```
-if you can not open http://0.0.0.0:6006, you can try  **http:localhost:6006**
-
 --------------------------------------------------------------------------------------------------------------
-# Layers (contrib)
+## Layers (contrib)
 ## Tensorboard Ops
 Higher level ops for building neural network layers:
 ```
@@ -72,6 +63,14 @@ tf.contrib.layers.summarize_collection        --->  Summarize a graph collection
 
 
 
+-------------------------------------------------------------------------------------------------------
+## Use Tensorboard:
+
+In the command windows
+```
+tensorboard --logdir=Path to your folder where your file is.
+```
+if you can not open http://0.0.0.0:6006, you can try  **http:localhost:6006**
 
 
 
