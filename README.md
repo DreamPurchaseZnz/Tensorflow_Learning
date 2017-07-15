@@ -62,6 +62,34 @@ tf.contrib.layers.summarize_collection        --->  Summarize a graph collection
 
 
 -------------------------------------------------------------------------------------------------------
+## Graph collection
+Graph collection is used for collect parameters from specific graph
+```
+tf.add_to_collection(name, value)
+tf.get_collection(key, scope=None)   
+tf.get_collection_ref(key)
+```
+About Key is the GraphKeys class which contains many standard names for collections. You can use various preset names to collect and retrive values with a graph.Standard keys are defined as following:
+```
+GLOBAL_VARIABLES                   --->  Shared across distributed environment
+LOCAL_VARIABLES                    --->  Variable objects that are local to each machine 
+MODEL_VARIABLES                    --->  Model for inference
+----------------------------------------------------------------------------------------------
+Above use tf.contrib.framework to add to this collection
+----------------------------------------------------------------------------------------------
+TRAINABLE_VARIABLES                --->  Variable that will be trained by an optimzer
+SUMMARIES                          --->  Attach to Graph
+QUEUE_RUNNERS: 
+MOVING_AVERAGE_VARIABLES: 
+REGULARIZATION_LOSSES: 
+WEIGHTS:
+BIASES:
+ACTIVATIONS: 
+```
+
+
+
+
 ## Use Tensorboard:
 
 In the command windows
