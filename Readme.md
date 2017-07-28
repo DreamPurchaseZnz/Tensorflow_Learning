@@ -1,5 +1,13 @@
 Tensorflow
 ---------------------------------------------------------------
+Tensorflow mainly includes four parts.
+```
+tf                       --->  442
+tf.contrib               --->  974
+tf.nn                    --->  81
+tf.train                 --->  104
+```
+
 A TensorFlow computation, represented as a dataflow graph.A Graph contains a set of tf.Operation objects, which represent units of computation; and tf.Tensor objects, which represent the units of data that flow between operations.
 
 --------------------------------------------------------------------------------------------------------------
