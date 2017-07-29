@@ -3,7 +3,7 @@ Neural network support
 
 # Functions
 
-####################################  POOLING AND CONV AND NORMALIZATION ##############################################
+* POOLING AND CONV AND NORMALIZATION 
 ```
 all_candidate_sampler
 atrous_conv2d                            ---> Atrous convolution(a.k.a. convolution with holes or dilated convolution)
@@ -40,7 +40,7 @@ quantized_max_pool
 raw_rnn
 separable_conv2d
 ```
-####################################  ACTIVATION FUNCTION  ##############################################
+* ACTIVATION FUNCTION 
 ```
 xw_plus_b                                --->  Computes matmul(x, weights) + biases.
 relu_layer                               ---> Computes Relu(x * weight + biases).
@@ -57,7 +57,7 @@ softplus                                 ---> Computes softplus: log(exp(feature
 softsign                                 ---> Computes softsign: features / (abs(features) + 1).
 dropout                                  ---> Computes dropout
 ```
-####################################  LOSS FUNCTION  ##############################################
+* LOSS FUNCTION 
 ```
 sigmoid_cross_entropy_with_logits        ---> Computes sigmoid cross entropy given logits.
 softmax_cross_entropy_with_logits        ---> Computes softmax cross entropy between logits and labels.
@@ -69,8 +69,7 @@ log_poisson_loss
 nce_loss
 sampled_softmax_loss
 ```
-
-####################################  RNN AND EMBEDDING AND SAMPLER  ##############################################
+* RNN AND EMBEDDING AND SAMPLER 
 ```
 static_bidirectional_rnn
 static_rnn
