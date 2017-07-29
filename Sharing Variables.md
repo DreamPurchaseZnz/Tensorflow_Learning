@@ -3,12 +3,12 @@
 Today, we will talk something about sharing variables . It can be a very complex problem,however ,it is actually neccessary to know that,for when building complex models , you ofen need to share large of variables and you might want to initialize all of them in one place
 so this tutorial show how this can be done using the following functions 
 ```
-tf.variable_scope                   ---> Carry a name that will be used as a prefix for variables names and a reuse flag to         
-                                         Distinguish the function of get_variable
-tf.get_variable                     ---> Create new variables or reusing variables
-tf.reset_default_graph()            ---> Clears the default graph stack and resets the global default graph
-tf.get_variable_scope()             ---> Retrieve the current scope
-tf.get_variable_scope.reuse_variables()  ---> Set reuse flag to be true
+tf.variable_scope                         ---> Carry a name that will be used as a prefix for variables names and a reuse flag to         
+                                               Distinguish the function of get_variable
+tf.get_variable                           ---> Create new variables or reusing variables
+tf.reset_default_graph()                  ---> Clears the default graph stack and resets the global default graph
+tf.get_variable_scope()                   ---> Retrieve the current scope
+tf.get_variable_scope.reuse_variables()   ---> Set reuse flag to be true
 ```
 ## Necessity
 ```
