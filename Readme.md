@@ -124,9 +124,9 @@ tf.train.RMSPropOptimizer
 ```
 Above Optimizers is class type , which have several method
 ```
-__init__             ---> Construct a new optimizer
-apply_gradients      ---> return A list of (gradient, variable) pairs      
-compute_gradients
+__init__             ---> Construct a new optimizer and set parameters
+apply_gradients      ---> Operation that apply gradients to variable  
+compute_gradients    ---> Return a list of (gradient_value, variable_value) pairs     
 minimize             ---> Add operation to minimize loss by updating var_list
 ```
 Maybe, Gradients are just unreasonable,so it comes to gradient clipping  
@@ -171,6 +171,10 @@ partial_run
 partial_run_setup
 reset
 run                                 ---> Running operation and evaluate tensor in fetches(can be a list), subsituting the values                                            In the feed_dict for corresponding values. 
+```
+One of the most important thing you should know is that before you run anything, remember that you should initialize the graph before you run a ops.
+```
+tf.Session(tf.global_variables_initializer())
 ```
 
 ## Control dependences & tf.Graph
