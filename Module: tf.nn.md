@@ -57,18 +57,7 @@ softplus                                 ---> Computes softplus: log(exp(feature
 softsign                                 ---> Computes softsign: features / (abs(features) + 1).
 dropout                                  ---> Computes dropout
 ```
-* LOSS FUNCTION 
-```
-sigmoid_cross_entropy_with_logits        ---> Computes sigmoid cross entropy given logits.
-softmax_cross_entropy_with_logits        ---> Computes softmax cross entropy between logits and labels.
-sparse_softmax_cross_entropy_with_logits ---> Computes sparse softmax cross entropy between logits and labels.
-weighted_cross_entropy_with_logits       ---> Computes a weighted cross entropy
-l2_loss                                  ---> Computes half the L2 norm of a tensor without the sqrt
-l2_normalize                             ---> Normalizes along dimension dim using an L2 norm
-log_poisson_loss
-nce_loss
-sampled_softmax_loss
-```
+
 * RNN AND EMBEDDING AND SAMPLER 
 ```
 static_bidirectional_rnn
@@ -97,3 +86,19 @@ learned_unigram_candidate_sampler
 log_uniform_candidate_sampler
 lrn
 ```
+* LOSS FUNCTION 
+```
+sigmoid_cross_entropy_with_logits        ---> Computes sigmoid cross entropy given logits.
+softmax_cross_entropy_with_logits        ---> Computes softmax cross entropy between logits and labels.
+sparse_softmax_cross_entropy_with_logits ---> Computes sparse softmax cross entropy between logits and labels.
+weighted_cross_entropy_with_logits       ---> Computes a weighted cross entropy
+l2_loss                                  ---> Computes half the L2 norm of a tensor without the sqrt
+l2_normalize                             ---> Normalizes along dimension dim using an L2 norm
+log_poisson_loss
+nce_loss
+sampled_softmax_loss
+```
+## Specific functions
+**sigmoid_cross_entropy_with_logits**: Measures the probability error in **discrete classification tasks** in which each class is independent and **not mutually exclusive**. For instance, one could perform multilabel classification where a picture can contain both an elephant and a dog at the same time.
+
+**softmax_cross_entropy_with_logits**:Measures the probability error in discrete classification tasks in which the classes are **mutually exclusive** (each entry is in exactly one class). For example, each CIFAR-10 image is labeled with one and only one label: an image can be a dog or a truck, but not both.
