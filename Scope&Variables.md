@@ -150,8 +150,10 @@ with tf.variable_scope("foo"):
     x = 1.0 + tf.get_variable("v", [1])
 assert x.op.name == "foo/add"
 ```
-Building graph is discussed above and the following is for optimizer
+
+how do we just build the graph and automatically retrieve the parameters?
 ----------------------------------------------------------------------------------------------------------------------
+Building graph is discussed above and the following is for optimizer
 ## Necessity
 As talking above, it is good to use variable_dict but not the best.In more complex model,such as four convolutional layer and three dense layers, it has to build every variable for each layer, it is a hard work. So how do we just build the graph and automatically retrieve the parameters? here is a good example.
 ```
@@ -160,7 +162,7 @@ with tf.variable_scope('name') as scope:
  
 prameters = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES,scope='name')
 ```
-## Functions
+
 ## Graph collection
 Graph collection is used for collect parameters from specific graph
 ```
