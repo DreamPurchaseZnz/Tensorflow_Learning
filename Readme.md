@@ -170,7 +170,7 @@ close                               ---> Free all resource associated with this 
 partial_run
 partial_run_setup
 reset
-run                                 ---> Running operation and evaluate tensor in fetches, subsituting the values in the feed_dict                                          For corresponding values. --> Fetches can be a single graph ,arbitrarily nested                                                    list,tupe,namedtupe,dict, or OrderedDict containing graph elements at its leaves
+run                                 ---> Running operation and evaluate tensor in fetches(can be a list), subsituting the values                                            In the feed_dict for corresponding values. 
 ```
 
 ## Control dependences & tf.Graph
