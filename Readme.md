@@ -191,11 +191,12 @@ Methods
   __init__
   add_to_collection
   clear_collection                   --->  Clears all values in a collection.
-  container                          --->  Returns a context manager that specifies the resource container to use.
-  control_dependencies               --->  Returns a context manager that specifies control dependencies.See examples in tensorflow
-  device                             --->  Returns a context manager that specifies the default device to use
+  container                          
+  control_dependencies               --->  specifies control dependencies.
+  device                             --->  specifies the default device to use
   finalize                           --->  Finalizes this graph, making it read-only.
   get_all_collection_keys            --->  Returns a list of collections used in this graph
+  ----------------------------------------------------------------------------------------------------------------
   get_collection                     --->  Returns a list of values in the collection with the given name
   get_collection_ref
   get_name_scope                     --->  Returns the current name scope
