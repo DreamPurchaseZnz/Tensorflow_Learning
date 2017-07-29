@@ -3,10 +3,9 @@ Neural network support
 
 # Functions
 
-**crelu** is worthy to know and try
+####################################  POOLING AND CONV AND NORMALIZATION ##############################################
 ```
 all_candidate_sampler
-####################################  POOLING AND CONV AND NORMALIZATION ##############################################
 atrous_conv2d                            ---> Atrous convolution(a.k.a. convolution with holes or dilated convolution)
 atrous_conv2d_transpose
 avg_pool                                 ---> Performs the average pooling on the input
@@ -40,7 +39,9 @@ quantized_conv2d
 quantized_max_pool
 raw_rnn
 separable_conv2d
+```
 ####################################  ACTIVATION FUNCTION  ##############################################
+```
 xw_plus_b                                --->  Computes matmul(x, weights) + biases.
 relu_layer                               ---> Computes Relu(x * weight + biases).
 tanh                                     ---> Computes hyperbolic tangent of x element-wise.
@@ -55,8 +56,9 @@ log_softmax                              ---> Computes log softmax activations.
 softplus                                 ---> Computes softplus: log(exp(features) + 1).
 softsign                                 ---> Computes softsign: features / (abs(features) + 1).
 dropout                                  ---> Computes dropout
-
+```
 ####################################  LOSS FUNCTION  ##############################################
+```
 sigmoid_cross_entropy_with_logits        ---> Computes sigmoid cross entropy given logits.
 softmax_cross_entropy_with_logits        ---> Computes softmax cross entropy between logits and labels.
 sparse_softmax_cross_entropy_with_logits ---> Computes sparse softmax cross entropy between logits and labels.
@@ -66,9 +68,10 @@ l2_normalize                             ---> Normalizes along dimension dim usi
 log_poisson_loss
 nce_loss
 sampled_softmax_loss
-
+```
 
 ####################################  RNN AND EMBEDDING AND SAMPLER  ##############################################
+```
 static_bidirectional_rnn
 static_rnn
 static_state_saving_rnn
