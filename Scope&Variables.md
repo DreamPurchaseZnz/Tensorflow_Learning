@@ -1,4 +1,4 @@
-# Sharing variables
+# Sharing variables and variable_scope
 --------------------------------------------------------------------------------------------
 Today, we will talk something about sharing variables . It can be a very complex problem,however ,it is actually neccessary to know that,for when building complex models , you ofen need to share large of variables and you might want to initialize all of them in one place
 so this tutorial show how this can be done using the following functions 
@@ -150,3 +150,44 @@ with tf.variable_scope("foo"):
     x = 1.0 + tf.get_variable("v", [1])
 assert x.op.name == "foo/add"
 ```
+Building graph is discussed above and the following is for optimizer
+----------------------------------------------------------------------------------------------------------------------
+## Necessity
+As talking above, it is good to use variable_dict but not the best.In more complex model,such as four convolutional layer and three dense layers, it has to build every variable for each layer, it is a hard work. So how do we just build the graph and automatically retrieve the parameters? here is a good example.
+```
+with tf.variable_scope('name') as scope:
+  build your graph
+ 
+prameters = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES,scope='name')
+```
+## Functions
+## Graph collection
+Graph collection is used for collect parameters from specific graph
+```
+tf.add_to_collection(name, value)
+tf.get_collection(key, scope=None)   
+tf.get_collection_ref(key)
+```
+About Key is the GraphKeys class which contains many standard names for collections. You can use various preset names to collect and retrive values with a graph.Standard keys are defined as following:
+```
+key = tf.GraphKeys.TRAINABLE_VARIABLES
+```
+```
+GLOBAL_VARIABLES                   --->  Shared across distributed environment
+LOCAL_VARIABLES                    --->  Variable objects that are local to each machine 
+MODEL_VARIABLES                    --->  Model for inference
+----------------------------------------------------------------------------------------------
+Above use tf.contrib.framework to add to this collection
+----------------------------------------------------------------------------------------------
+TRAINABLE_VARIABLES                --->  Variable that will be trained by an optimzer
+SUMMARIES                          --->  Attach to Graph
+QUEUE_RUNNERS: 
+MOVING_AVERAGE_VARIABLES: 
+REGULARIZATION_LOSSES: 
+WEIGHTS:
+BIASES:
+ACTIVATIONS: 
+```
+
+
+
