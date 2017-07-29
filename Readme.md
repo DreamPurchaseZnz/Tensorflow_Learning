@@ -143,6 +143,38 @@ Global norm can be written like this:
 ```
 global_norm = sqrt(sum([l2norm(t)**2 for t in t_list]))
 ```
+
+
+----------------------------------------------------------------------------------------------------------
+                        NOW WE CAN LAUNCH A GRAPH IN A SESSION TO EVALUATE TENSOR AND RUNNING OPERATION
+----------------------------------------------------------------------------------------------------------
+## Session
+A class for running TensorFlow operations, A Session may own resource , so it important to release thoes resource when they are no longer required.
+```
+#invoke the method tf.Session.close
+sess = tf.Sessionf()
+sess.run(..)
+sess.close()
+
+
+#Using the context manager
+with tf.Session() as sess
+  sess.run(..)
+```
+
+Method
+```
+__init__
+as_default                          ---> Returns a context manager that changing default session.                  
+close                               ---> Free all resource associated with this session
+partial_run
+partial_run_setup
+reset
+run                                 ---> Running operation and evaluate tensor in fetches, subsituting the values in the feed_dict                                          For corresponding values. --> Fetches can be a single graph ,arbitrarily nested                                                    list,tupe,namedtupe,dict, or OrderedDict containing graph elements at its leaves
+```
+
+
+
 ## Control dependences & tf.Graph
 Once talking about control dependences ,we are entering into the most complex domain -class **tf.Graph**.Let's just briefly introduce it:
 ```
@@ -229,7 +261,8 @@ tensorboard --logdir=Path to your folder where your file is.
 ```
 if you can not open http://0.0.0.0:6006, you can try  **http:localhost:6006**
 
-## tf.train.Saver
+## Saver
+tf.train.Saver
 The Saver class adds ops to save and restore checkpoints,which is a binary files in a propriotary format that map variable names to tensor values.
 ```
 Properties:
