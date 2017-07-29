@@ -173,8 +173,6 @@ reset
 run                                 ---> Running operation and evaluate tensor in fetches, subsituting the values in the feed_dict                                          For corresponding values. --> Fetches can be a single graph ,arbitrarily nested                                                    list,tupe,namedtupe,dict, or OrderedDict containing graph elements at its leaves
 ```
 
-
-
 ## Control dependences & tf.Graph
 Once talking about control dependences ,we are entering into the most complex domain -class **tf.Graph**.Let's just briefly introduce it:
 ```
