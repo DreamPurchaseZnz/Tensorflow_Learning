@@ -125,7 +125,7 @@ tf.train.RMSPropOptimizer
 Above Optimizers is class type , which have several method
 ```
 __init__             ---> Construct a new optimizer
-apply_gradients      
+apply_gradients      ---> return A list of (gradient, variable) pairs      
 compute_gradients
 minimize             ---> Add operation to minimize loss by updating var_list
 ```
