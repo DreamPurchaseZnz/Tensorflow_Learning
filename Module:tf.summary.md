@@ -10,12 +10,12 @@ scalar                   --->  A single scalar value.
 tensor_summary 
 audio                    
 image                    --->  Adding a image summary
-histogram                --->  Adding a histogram summary makes it possible to visualize your data's distribution in TensorBoard
+histogram                --->  visualize your data's distribution 
 text                     --->  textual data
 
 # operation 
 merge                    --->  Merges summaries
-merge_all                --->  Merges all summaries collected in the default graph-key=tf.GraphKeys.SUMMARIES
+merge_all                --->  Merges all summaries collected 
 filewriter
 
 summary_description
