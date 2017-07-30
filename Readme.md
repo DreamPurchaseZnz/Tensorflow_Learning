@@ -285,7 +285,8 @@ tf.train.Saver
 The Saver class adds ops to save and restore checkpoints,which is a binary files in a propriotary format that map variable names to tensor values.
 ```
 Properties:
-  last_checkpoints                      --->  A list of checkpoint filenames, sorted from oldest to newest
+
+last_checkpoints                      --->  A list of checkpoint filenames, sorted from oldest to newest
   
 ```
 Methods as following:
