@@ -191,33 +191,49 @@ Methods
   __init__
   add_to_collection
   clear_collection                   --->  Clears all values in a collection.
-  container                          
-  control_dependencies               --->  specifies control dependencies.
-  device                             --->  specifies the default device to use
+  container                         
   finalize                           --->  Finalizes this graph, making it read-only.
   get_all_collection_keys            --->  Returns a list of collections used in this graph
+  
   ----------------------------------------------------------------------------------------------------------------
+  
   get_collection                     --->  Returns a list of values in the collection with the given name
-  get_collection_ref
+  control_dependencies               --->  specifies control dependencies.
+  device                             --->  specifies the default device to use
   get_name_scope                     --->  Returns the current name scope
+  name_scope                         --->  Returns a context manager that creates hierarchical names for operations.
+  
+  ----------------------------------------------------------------------------------------------------------------
+  
+  get_collection_ref
   get_operation_by_name              --->  Returns the Operation with the given name
   get_operations                     --->  Return the list of operations in the graph
   get_tensor_by_name
   gradient_override_map
   is_feedable
   is_fetchable
-  name_scope                         --->  Returns a context manager that creates hierarchical names for operations.
   prevent_feeding                    --->  Marks the given tensor as unfeedable in this graph
   prevent_fetching                   --->  Marks the given op as unfetchable in this graph
   unique_name
 ```
-As for control dependence we can explain it as following example:
+As for control dependence ,control dependece applies only to
+* ops constructed within context 
+* run after the control_input that indicates running ops can invoke the control input.
+the following example can illustrate this point.
 ```
-with g.control_dependencies([a, b]):
+with tf.control_dependencies([a, b]):
   # Ops constructed here run after `a` and `b`.
-  with g.control_dependencies([c, d]):
-    # Ops constructed here run after `a`, `b`, `c`, and `d`.
+```
+```
+w = tf.Variable(1)
+mul = tf.multiply(w, 2)
+sess = tf.Session()
+sess.run(tf.global_variables_initializer())
 
+with tf.control_dependencies([mul]):
+    # The add op is created within the context, so control
+    # dependency will be added.
+    mul = tf.multiply(tf.add(w,2),mul)
 ```
 In this case,a new Operation will have control dependencies on the union of control_inputs from all active contexts
 So What is the point of doing this? obviously, it's used to control computation order. for example ,only you updata gradient can you clip it.  
