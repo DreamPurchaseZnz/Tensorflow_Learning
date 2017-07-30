@@ -1,4 +1,4 @@
-Module: Visualize the status
+Module: tf.summary
 ---------------------------------------------------------------------------------------------------
 ## Summary Operations
 Tensor summaries for exporting information about a model. 
@@ -73,3 +73,45 @@ summary_str = sess.run(summary, feed_dict=feed_dict)
 summary_writer.add_summary(summary_str, step)
 ```
 When the event files are written, Tensorboard may be run against the training folder to display the values from summaries.
+
+Module: tf.train.saver()
+---------------------------------------------------------------------------------------------------
+The Saver class adds ops to save and restore checkpoints,which is a binary files in a propriotary format that map variable names to tensor values.
+```
+Properties:
+
+last_checkpoints                      --->  A list of checkpoint filenames, sorted from oldest to newest
+  
+```
+Methods as following:
+```
+__init__
+as_saver_def                           --->  Generates a SaverDef representation of this save
+build                                  --->  Proto
+export_meta_graph
+from_proto
+recover_last_checkpoints               --->  Recovers the internal saver state after a crash.
+
+restore                                --->  A way to initialize variables
+save                                   --->  Save variables,it requires a session in which graph was launched and variables was                                                initialized
+
+
+set_last_checkpoints_with_time         --->  Sets the list of old checkpoint filenames and timestamps
+to_proto
+
+```
+## Save a checkpoint
+In order to emit a checkpoint file that may be used to **later restore a model** for **further training or evaluation**, we can instantiate a tf.train.saver.
+```
+saver = tf.train.Saver()
+```
+In the training loop, the *tf.train.Saver.save* method will **periodically** be called to write a checkpoint file to the training dictionary with the current values of **all the trianable variable**.
+```
+saver.save(sess, ckpt_dir,global_step= step)
+```
+At some later point in the future, training might be **resummed** by using the *tf.train.saver.restore* method to **reload the model parameters**.
+```
+saver.restore(sess,ckpt_dir)
+```
+Restore previously saved variables ,It requires **a session** in which **the graph** was launched. 
+The variables to restore do not have to have been initialized, as restoring is itself **a way to initialize variables**.
