@@ -111,7 +111,7 @@ saver.save(sess, ckpt_dir,global_step= step)
 ```
 At some later point in the future, training might be **resummed** by using the *tf.train.saver.restore* method to **reload the model parameters**.
 ```
-saver.restore(sess,ckpt_dir)
+saver.restore(sess,tf.train.latest_checkpoint(ckpt_dir))
 ```
 Restore previously saved variables ,It requires **a session** in which **the graph** was launched. 
 The variables to restore do not have to have been initialized, as restoring is itself **a way to initialize variables**.
