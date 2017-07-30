@@ -16,7 +16,7 @@ A TensorFlow computation, represented as a dataflow graph.A Graph contains a set
 tf.contrib.layers.avg_pool2d 
 tf.contrib.layers.max_pool2d
 tf.contrib.layers.batch_norm 
-tf.contrib.layers.convolution2d                --->  Adds an N-D convolution followed by an optional batch_norm layer
+tf.contrib.layers.conv2d                       --->  Adds an N-D convolution followed by an optional batch_norm layer
 tf.contrib.layers.conv2d_in_plane              --->  Performs the same in-plane convolution to each channel independently
 tf.contrib.layers.convolution2d_in_plane       --->  Equal to conv2d in plane
 tf.nn.conv2d_transpose
@@ -38,6 +38,37 @@ tf.contrib.layers.unit_norm                    --->  Normalizes the given input 
 tf.contrib.layers.embed_sequence
 tf.contrib.layers.safe_embedding_lookup_sparse --->  Vacabulary aspect
 ```
+```
+conv2d(
+    # convolution related setting
+    inputs,
+    num_outputs,
+    kernel_size,
+    stride=1,
+    padding='SAME',
+    data_format=None,
+    rate=1,
+    
+    # Activation function
+    activation_fn=tf.nn.relu,
+    
+    # Batch Normalization
+    normalizer_fn=None,
+    normalizer_params=None,
+    weights_initializer=initializers.xavier_initializer(),
+    weights_regularizer=None,
+    biases_initializer=tf.zeros_initializer(),
+    biases_regularizer=None,
+    
+    # For name scope
+    reuse=None,
+    variables_collections=None,
+    outputs_collections=None,
+    trainable=True,
+    scope=None
+)
+```
+
 ## Regularizers
 Regularizers help prevent overfitting.
 ```
