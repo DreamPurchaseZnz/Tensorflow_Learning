@@ -302,7 +302,7 @@ reopen                   --->  can be called after close() to add more events in
 ```
 Now that you've modified your graph and have a FileWriter, you're ready to start running your network! If you want, you could run the merged summary op every single step, and record a ton of training data. That's likely to be more data than you need, though. Instead, consider running the merged summary op every n steps.
 
-## Tensorboard:
+## Tensorboard
 The computations you'll use TensorFlow for - like training a massive deep neural network - can be complex and confusing. To make it easier to understand, debug, and optimize TensorFlow programs, we've included a suite of visualization tools called TensorBoard.
 
 Launching TensorBoard-in the command windows
