@@ -160,6 +160,26 @@ apply_gradients      ---> Operation that apply gradients to variable
 compute_gradients    ---> Return a list of (gradient_value, variable_value) pairs     
 minimize             ---> Add operation to minimize loss by updating var_list
 ```
+A small example can illustrate something:
+```
+x = tf.placeholder(dtype=tf.float32,shape=[1])
+z = tf.placeholder(dtype=tf.float32,shape=[1])
+w = tf.Variable(initial_value=tf.random_uniform([1],-1,1),name='w')
+b = tf.Variable(initial_value=tf.zeros([1]),name='b',dtype=tf.float32)
+
+y= w*x+b
+loss = tf.reduce_mean(tf.square(x-z))
+optim = tf.train.AdadeltaOptimizer(0.5)
+grad =optim.compute_gradients(loss,var_list=[w,b])
+
+# grad also is a part of graph model.so, it have some property before running.
+for gradient,variable in grad:
+    print(variable.name)
+    print(variable.dtype)
+    print(variable)
+```
+
+
 Maybe, Gradients are just unreasonable,so it comes to gradient clipping  
 ## Gradient Clipping
 Gradient clipping ,several operations provided by tensorflow, is used to add clipping function to your graph.Those method can particularly useful for exploding or vanishing gradient.
