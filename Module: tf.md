@@ -1,5 +1,6 @@
 Module: tf
 -----------------------------------------------------------------------------------
+```
 tf.reshape
 tf.placeholder
 tf.Variable
@@ -13,3 +14,4 @@ tf.IndexedSlices
 tf.assign
 tf.clip_by_value
 tf.transpose
+```
