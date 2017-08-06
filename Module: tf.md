@@ -14,4 +14,5 @@ tf.IndexedSlices
 tf.assign
 tf.clip_by_value
 tf.transpose
+tf.expand_dims                               ---> insert a dimension of 1  into a tensor'shape
 ```
