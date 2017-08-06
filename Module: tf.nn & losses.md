@@ -98,39 +98,72 @@ log_poisson_loss
 nce_loss
 sampled_softmax_loss
 ```
+tf.nn.sigmoid_cross_entropy_with_logits
+```
+sigmoid_cross_entropy_with_logits(
+    _sentinel=None,
+    labels=None,
+    logits=None,
+    name=None
+)
+```
+
+For brevity, let x = logits, z = labels. The logistic loss is
+```
+  z * -log(sigmoid(x)) + (1 - z) * -log(1 - sigmoid(x))
+= z * -log(1 / (1 + exp(-x))) + (1 - z) * -log(exp(-x) / (1 + exp(-x)))
+= z * log(1 + exp(-x)) + (1 - z) * (-log(exp(-x)) + log(1 + exp(-x)))
+= z * log(1 + exp(-x)) + (1 - z) * (x + log(1 + exp(-x))
+= (1 - z) * x + log(1 + exp(-x))
+= x - x * z + log(1 + exp(-x))
+```
+For x < 0, to avoid overflow in exp(-x), we reformulate the above
+```
+  x - x * z + log(1 + exp(-x))
+= log(exp(x)) - x * z + log(1 + exp(-x))
+= - x * z + log(1 + exp(x))
+```
+Hence, to ensure stability and avoid overflow, the implementation uses this equivalent formulation
+```
+max(x, 0) - x * z + log(1 + exp(-abs(x)))
+logits and labels must have the same type and shape.
+```
+
 ## Module: tf.losses
 Losses operation for use in neural networks
 Fuctions:
 ```
-absolute_difference(...): Adds an Absolute Difference loss to the training procedure.
-
-add_loss(...): Adds a externally defined loss to the collection of losses.
-
-compute_weighted_loss(...): Computes the weighted loss.
-
-cosine_distance(...): Adds a cosine-distance loss to the training procedure.
-
-get_losses(...): Gets the list of losses from the loss_collection.
-
-get_regularization_loss(...): Gets the total regularization loss.
-
-get_regularization_losses(...): Gets the list of regularization losses.
-
-get_total_loss(...): Returns a tensor whose value represents the total loss.
-
-hinge_loss(...): Adds a hinge loss to the training procedure.
-
-huber_loss(...): Adds a Huber Loss term to the training procedure.
-
-log_loss(...): Adds a Log Loss term to the training procedure.
-
-mean_pairwise_squared_error(...): Adds a pairwise-errors-squared loss to the training procedure.
-
-mean_squared_error(...): Adds a Sum-of-Squares loss to the training procedure.
-
-sigmoid_cross_entropy(...): Creates a cross-entropy loss using tf.nn.sigmoid_cross_entropy_with_logits.
-
-softmax_cross_entropy(...): Creates a cross-entropy loss using tf.nn.softmax_cross_entropy_with_logits.
-
-sparse_softmax_cross_entropy(...): Cross-entropy loss using tf.nn.sparse_softmax_cross_entropy_with_logits.
+absolute_difference
+add_loss
+compute_weighted_loss
+cosine_distance
+get_losses
+get_regularization_loss
+get_regularization_losses
+get_total_loss
+hinge_loss
+huber_loss
+log_loss
+mean_pairwise_squared_error
+mean_squared_error                                            ---> Adds a Sum-of-Squares loss to the training procedure.
+sigmoid_cross_entropy                                         ---> Add sigmoid cross entropy
+softmax_cross_entropy                                         ---> Creates a cross-entropy loss 
+sparse_softmax_cross_entropy                                  ---> Cross-entropy loss 
 ```
+tf.losses.sigmoid_cross_entropy
+```
+sigmoid_cross_entropy(
+    multi_class_labels,
+    logits,
+    weights=1.0,
+    label_smoothing=0,
+    scope=None,
+    loss_collection=tf.GraphKeys.LOSSES,
+    reduction=Reduction.SUM_BY_NONZERO_WEIGHTS
+)
+```
+```
+new_multiclass_labels = multiclass_labels * (1 - label_smoothing)
+                        + 0.5 * label_smoothing
+```
+
