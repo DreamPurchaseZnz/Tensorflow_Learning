@@ -1,5 +1,5 @@
 The following operators are overloaded in the TensorFlow Python API:
-
+```
 __neg__ (unary -)
 __abs__ (abs())
 __invert__ (unary ~)
@@ -18,3 +18,4 @@ __lt__ (binary <)
 __le__ (binary <=)
 __gt__ (binary >)
 __ge__ (binary >=)
+```
