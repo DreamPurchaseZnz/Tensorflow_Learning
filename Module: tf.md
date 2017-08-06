@@ -21,3 +21,18 @@ tf.concat                                    ---> Concatenates tensors along one
 tf.minimum                                   ---> Returns the min of x and y (i.e. x < y ? x : y) element-wise.
 tf.maximum                                     
 ```
+e.g.
+f:(batch_size,y_dim)  ---> (batch_size,img_dim,img_dim ,y_dim)
+```
+# Smart method
+f = tf.expand_dims(tf.expand_dims(f, 1), 2)
+f = tf.tile(f, [1, img_dim , img_dim , 1])
+
+# Stupid method
+f=[]
+for i in range(y_dim):
+  g = tf.tile(f(:,i),[batch_size,img_dim]).reshape(batch_size,1,img_dim,1)
+  f.append(g)
+f= tf.concat(g,axis = 0)
+
+```
