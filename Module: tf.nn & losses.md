@@ -3,7 +3,7 @@ Neural network support
 
 # Functions
 
-* POOLING AND CONV AND NORMALIZATION 
+* Pooling ,CNN and Normalization 
 ```
 all_candidate_sampler
 atrous_conv2d                            ---> Atrous convolution(a.k.a. convolution with holes or dilated convolution)
@@ -40,7 +40,7 @@ quantized_max_pool
 raw_rnn
 separable_conv2d
 ```
-* ACTIVATION FUNCTION 
+* Activation function 
 ```
 xw_plus_b                                --->  Computes matmul(x, weights) + biases.
 relu_layer                               ---> Computes Relu(x * weight + biases).
@@ -86,7 +86,7 @@ learned_unigram_candidate_sampler
 log_uniform_candidate_sampler
 lrn
 ```
-* LOSS FUNCTION 
+* Loss function
 ```
 sigmoid_cross_entropy_with_logits        ---> Computes sigmoid cross entropy given logits.
 softmax_cross_entropy_with_logits        ---> Computes softmax cross entropy between logits and labels.
@@ -98,7 +98,39 @@ log_poisson_loss
 nce_loss
 sampled_softmax_loss
 ```
-## Specific functions
-**sigmoid_cross_entropy_with_logits**: Measures the probability error in **discrete classification tasks** in which each class is independent and **not mutually exclusive**. For instance, one could perform multilabel classification where a picture can contain both an elephant and a dog at the same time.
+## Module: tf.losses
+Losses operation for use in neural networks
+Fuctions:
+```
+absolute_difference(...): Adds an Absolute Difference loss to the training procedure.
 
-**softmax_cross_entropy_with_logits**:Measures the probability error in discrete classification tasks in which the classes are **mutually exclusive** (each entry is in exactly one class). For example, each CIFAR-10 image is labeled with one and only one label: an image can be a dog or a truck, but not both.
+add_loss(...): Adds a externally defined loss to the collection of losses.
+
+compute_weighted_loss(...): Computes the weighted loss.
+
+cosine_distance(...): Adds a cosine-distance loss to the training procedure.
+
+get_losses(...): Gets the list of losses from the loss_collection.
+
+get_regularization_loss(...): Gets the total regularization loss.
+
+get_regularization_losses(...): Gets the list of regularization losses.
+
+get_total_loss(...): Returns a tensor whose value represents the total loss.
+
+hinge_loss(...): Adds a hinge loss to the training procedure.
+
+huber_loss(...): Adds a Huber Loss term to the training procedure.
+
+log_loss(...): Adds a Log Loss term to the training procedure.
+
+mean_pairwise_squared_error(...): Adds a pairwise-errors-squared loss to the training procedure.
+
+mean_squared_error(...): Adds a Sum-of-Squares loss to the training procedure.
+
+sigmoid_cross_entropy(...): Creates a cross-entropy loss using tf.nn.sigmoid_cross_entropy_with_logits.
+
+softmax_cross_entropy(...): Creates a cross-entropy loss using tf.nn.softmax_cross_entropy_with_logits.
+
+sparse_softmax_cross_entropy(...): Cross-entropy loss using tf.nn.sparse_softmax_cross_entropy_with_logits.
+```
