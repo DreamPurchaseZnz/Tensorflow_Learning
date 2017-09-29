@@ -3,7 +3,7 @@ Neural network support
 
 # Functions
 
-* Pooling ,CNN and Normalization 
+### Pooling ,CNN and Normalization 
 ```
 all_candidate_sampler
 atrous_conv2d                            ---> Atrous convolution(a.k.a. convolution with holes or dilated convolution)
@@ -40,7 +40,7 @@ quantized_max_pool
 raw_rnn
 separable_conv2d
 ```
-* Activation function 
+### Activation function 
 ```
 xw_plus_b                                --->  Computes matmul(x, weights) + biases.
 relu_layer                               ---> Computes Relu(x * weight + biases).
@@ -58,7 +58,7 @@ softsign                                 ---> Computes softsign: features / (abs
 dropout                                  ---> Computes dropout
 ```
 
-* RNN AND EMBEDDING AND SAMPLER 
+### RNN AND EMBEDDING AND SAMPLER 
 ```
 static_bidirectional_rnn
 static_rnn
@@ -86,7 +86,7 @@ learned_unigram_candidate_sampler
 log_uniform_candidate_sampler
 lrn
 ```
-* Loss function
+### Loss function
 ```
 sigmoid_cross_entropy_with_logits        ---> Computes sigmoid cross entropy given logits.
 softmax_cross_entropy_with_logits        ---> Computes softmax cross entropy between logits and labels.
@@ -98,6 +98,45 @@ log_poisson_loss
 nce_loss
 sampled_softmax_loss
 ```
+### Example
+[The math principle is](https://zh.wikipedia.org/zh-cn/Softmax%E5%87%BD%E6%95%B0) :
+```
+import math
+z = [1,2,3,4]
+z_exp = [math.exp(i) for i in z]
+print(z_exp)
+
+[2.718281828459045, 7.38905609893065, 20.085536923187668, 54.598150033144236]
+
+sum_z_exp = sum(z_exp)
+print(sum_z_exp)
+
+84.7910248837216
+
+softmax = [round(i/sum_z_exp,3) for i in z_exp]
+print(softmax)
+
+[0.032, 0.087, 0.237, 0.644]
+```
+
+Above it is based on principle now  we can try the tensorflow function to see whether the result is same with the math.
+```
+import tensorflow as tf
+import numpy as np
+sess = tf.Session()
+
+
+a = tf.constant(np.array([1,2,3,4]),dtype=tf.float32) or tf.constant(np.array([1.,2.,3.,4.]))
+print(sess.run(a))
+print(sess.run(tf.nn.softmax(a)))
+
+```
+```
+print(sess.run(tf.nn.softmax(a)))
+[ 0.0320586   0.08714432  0.23688284  0.64391428]
+```
+
+
 tf.nn.sigmoid_cross_entropy_with_logits
 ```
 sigmoid_cross_entropy_with_logits(
@@ -149,21 +188,5 @@ mean_squared_error                                            ---> Adds a Sum-of
 sigmoid_cross_entropy                                         ---> Add sigmoid cross entropy
 softmax_cross_entropy                                         ---> Creates a cross-entropy loss 
 sparse_softmax_cross_entropy                                  ---> Cross-entropy loss 
-```
-tf.losses.sigmoid_cross_entropy
-```
-sigmoid_cross_entropy(
-    multi_class_labels,
-    logits,
-    weights=1.0,
-    label_smoothing=0,
-    scope=None,
-    loss_collection=tf.GraphKeys.LOSSES,
-    reduction=Reduction.SUM_BY_NONZERO_WEIGHTS
-)
-```
-```
-new_multiclass_labels = multiclass_labels * (1 - label_smoothing)
-                        + 0.5 * label_smoothing
 ```
 
