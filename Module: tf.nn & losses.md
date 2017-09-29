@@ -136,7 +136,7 @@ print(sess.run(tf.nn.softmax(a)))
 [ 0.0320586   0.08714432  0.23688284  0.64391428]
 ```
 
-**softmax_cross_entropy** equal to:
+[**softmax_cross_entropy**](https://stackoverflow.com/questions/34240703/difference-between-tensorflow-tf-nn-softmax-and-tf-nn-softmax-cross-entropy-with) equal to:
 ```
 y_hat_softmax = tf.nn.softmax(y_hat)
 total_loss = tf.reduce_mean(-tf.reduce_sum(y_true * tf.log(y_hat_softmax), [1]))
