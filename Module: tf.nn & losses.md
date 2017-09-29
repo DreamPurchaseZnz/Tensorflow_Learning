@@ -173,13 +173,12 @@ Out[35]:
 0.83934333897877944
 
 ```
+The same result
 ```
 loss_per_instance_2 = tf.nn.softmax_cross_entropy_with_logits(logits=y_hat, labels=y_true)
 sess.run(loss_per_instance_2)
 Out[37]: 
 array([ 0.4790107 ,  1.19967598])
-total_loss_2 = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(y_hat, y_true))
-sess.run(total_loss_2)
 
 total_loss_2 = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=y_hat, labels=y_true))
 sess.run(total_loss_2)
