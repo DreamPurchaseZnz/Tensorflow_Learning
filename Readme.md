@@ -189,9 +189,29 @@ tf.clip_by_average_norm    --->  Clips tensor values to a maximum average L2-nor
 tf.clip_by_global_norm     --->  Clips values of multiple tensors by the ratio of the sum of their norms.
 tf.global_norm             --->  Computes the global norm of multiple tensors.
 ```
-Global norm can be written like this:
+[Global norm can be written like this](https://stackoverflow.com/questions/36498127/how-to-effectively-apply-gradient-clipping-in-tensor-flow):
 ```
 global_norm = sqrt(sum([l2norm(t)**2 for t in t_list]))
+```
+[Processing gradients before applying them](https://www.tensorflow.org/versions/master/api_docs/python/tf/train/Optimizer#processing_gradients_before_applying_them).
+If you want to process the gradients before applying them you can instead use the optimizer in three steps:Compute the gradients with 1. compute_gradients().
+2. Process the gradients as you wish.
+3. Apply the processed gradients with apply_gradients().
+
+e.g
+```
+# Create an optimizer.
+opt = GradientDescentOptimizer(learning_rate=0.1)
+
+# Compute the gradients for a list of variables.
+grads_and_vars = opt.compute_gradients(loss, <list of variables>)
+
+# grads_and_vars is a list of tuples (gradient, variable).  Do whatever you
+# need to the 'gradient' part, for example cap them, etc.
+capped_grads_and_vars = [(MyCapper(gv[0]), gv[1]) for gv in grads_and_vars]
+
+# Ask the optimizer to apply the capped gradients.
+opt.apply_gradients(capped_grads_and_vars)
 ```
 
 
