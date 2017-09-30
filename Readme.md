@@ -194,8 +194,12 @@ tf.global_norm             --->  Computes the global norm of multiple tensors.
 global_norm = sqrt(sum([l2norm(t)**2 for t in t_list]))
 ```
 [Processing gradients before applying them](https://www.tensorflow.org/versions/master/api_docs/python/tf/train/Optimizer#processing_gradients_before_applying_them).
-If you want to process the gradients before applying them you can instead use the optimizer in three steps:Compute the gradients with 1. compute_gradients().
+If you want to process the gradients before applying them you can instead use the optimizer in three steps:Compute the gradients with 
+
+1. compute_gradients().
+
 2. Process the gradients as you wish.
+
 3. Apply the processed gradients with apply_gradients().
 
 e.g
@@ -212,6 +216,24 @@ capped_grads_and_vars = [(MyCapper(gv[0]), gv[1]) for gv in grads_and_vars]
 
 # Ask the optimizer to apply the capped gradients.
 opt.apply_gradients(capped_grads_and_vars)
+```
+**there is a big mistake if you don't pay attention to it**
+```
+#build graph
+x = tf.Varibale(dtype=float32, shape=[batch_size, ndim_x])
+train = tf.fully_connected(x,activation= tf.nn.relu)
+train = tf.fully_connected(train,activation= tf.nn.relu)
+y = tf.fully_connetcted(train, 1,activation=None)
+z = tf.fully_connetcted(train, 1,activation=None)
+```
+The Tensor graph like above, when you compute gradient about the loss of y ,there are some variable have no gradient. Thereby, if you use the tf.clip_by_value , you will get None value , which will raise the error
+```
+None values not supported
+```
+The following meature can be taken to sovle this problem:
+```
+capped_grads_and_vars = [(gv[0] if gv[0] is None else MyCapper(gv[0]), gv[1]) for gv in grads_and_vars]
+
 ```
 
 
