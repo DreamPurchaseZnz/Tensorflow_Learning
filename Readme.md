@@ -38,6 +38,7 @@ tf.contrib.layers.unit_norm                    --->  Normalizes the given input 
 tf.contrib.layers.embed_sequence
 tf.contrib.layers.safe_embedding_lookup_sparse --->  Vacabulary aspect
 ```
+For conv2d, the parameters like the following:
 ```
 conv2d(
     # convolution related setting
@@ -67,6 +68,33 @@ conv2d(
     trainable=True,
     scope=None
 )
+```
+**tf.contrib.layers.fully_connected**
+```
+fully_connected(
+    inputs,
+    num_outputs,
+    activation_fn=tf.nn.relu,
+    normalizer_fn=None,
+    normalizer_params=None,
+    weights_initializer=initializers.xavier_initializer(),
+    weights_regularizer=None,
+    biases_initializer=tf.zeros_initializer(),
+    biases_regularizer=None,
+    reuse=None,
+    variables_collections=None,
+    outputs_collections=None,
+    trainable=True,
+    scope=None
+)
+
+```
+Equal to:
+```
+tf.nn.dense()
+tf.nn.relu()
+tf.nn.batch_normlize()
+...
 ```
 
 ## Regularizers
