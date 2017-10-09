@@ -12,12 +12,21 @@ labels = tf.one_hot(indices=ones, depth=2,on_value=1,off_value=0)
 
 zeros = tf.zeros(shape=(10, 1),dtype=tf.int32)
 labels_ = tf.one_hot(indices=zeros, depth=2,on_value=1,off_value=0)
-
+```
+There are two implementation 
+```
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
     labels.eval()
     print(labels.eval())
     print(labels_.eval())
+```
+Second:
+```
+sess = tf.Session()
+sess.run(tf.global_variables_initializer())
+sess.run(labels)
+sess.run()
 ```
 
 simple example like that
@@ -27,4 +36,8 @@ res = tf.one_hot(indices=[0, 3], depth=4)
 with tf.Session() as sess:
     print(sess.run(res))
 
+```
+```
+[[ 1.  0.  0.  0.]
+ [ 0.  0.  0.  1.]]
 ```
