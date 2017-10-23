@@ -73,6 +73,31 @@ summary_str = sess.run(summary, feed_dict=feed_dict)
 summary_writer.add_summary(summary_str, step)
 ```
 When the event files are written, Tensorboard may be run against the training folder to display the values from summaries.
+There is another way to add summary
+```
+    def log_loss_accuracy(self, loss, accuracy, epoch, prefix, should_print=True):
+        if should_print:
+            print('mean cross_entropy: %f,mean accuracy:%f' % (
+                loss, accuracy
+            ))
+
+        summary = tf.Summary(value=[
+            tf.Summary.Value(
+                tag='loss_%s' % prefix, simple_value=float(loss)
+            ),
+            tf.Summary.Value(
+                tag='loss_%s' % prefix, simple_value=float(accuracy)
+            )
+        ])
+        self.summary_writer.add_summary(summary, epoch)
+```
+Compared with summary_str, this way is much like the normal way, First it does not need define the summary string and the operation of
+running the graph again, Second it's much easier, however it needs some extra knowledge, because this point is not covered by the 
+cookbook
+
+
+
+
 
 Module: tf.train.saver()
 ---------------------------------------------------------------------------------------------------
