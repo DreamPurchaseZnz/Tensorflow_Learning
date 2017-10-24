@@ -3,7 +3,7 @@ Neural network support
 
 # Functions
 
-### Pooling ,CNN and Normalization 
+## Pooling ,CNN and Normalization 
 ```
 all_candidate_sampler
 atrous_conv2d                            ---> Atrous convolution(a.k.a. convolution with holes or dilated convolution)
@@ -40,6 +40,23 @@ quantized_max_pool
 raw_rnn
 separable_conv2d
 ```
+### tf.nn.conv2d
+Compute a 2D convolution given 4-D input and filter tensors
+```
+conv2d(
+    input,                               ---> [batch_size, in_height, in_width, in_channal] 
+    filter,                              ---> [filter_height, filter_width, in_channal, out_channal]
+    strides,                             ---> A list of ints
+    padding,                             ---> A string from: "SAME", "VALID"
+    use_cudnn_on_gpu=None,
+    data_format=None,                    ---> An optional string from:"NHWC"([batch, height, width, channels]),"NCHW" 
+    name=None
+)
+```
+
+
+
+
 ### Activation function 
 ```
 xw_plus_b                                --->  Computes matmul(x, weights) + biases.
@@ -98,8 +115,10 @@ log_poisson_loss
 nce_loss
 sampled_softmax_loss
 ```
-### Example
-[The math principle is](https://zh.wikipedia.org/zh-cn/Softmax%E5%87%BD%E6%95%B0) :
+### Mathematic formula Vs the tf.nn.softmax
+
+[The math principle of softmax is in the wiki](https://zh.wikipedia.org/zh-cn/Softmax%E5%87%BD%E6%95%B0) 
+the following code is implementation: 
 ```
 import math
 z = [1,2,3,4]
@@ -119,12 +138,12 @@ print(softmax)
 [0.032, 0.087, 0.237, 0.644]
 ```
 
-Above it is based on principle now  we can try the tensorflow function to see whether the result is same with the math.
+Above it is based on principle now  
+we can try the tensorflow function to see whether the result is same with the math.
 ```
 import tensorflow as tf
 import numpy as np
 sess = tf.Session()
-
 
 a = tf.constant(np.array([1,2,3,4]),dtype=tf.float32) or tf.constant(np.array([1.,2.,3.,4.]))
 print(sess.run(a))
@@ -135,14 +154,8 @@ print(sess.run(tf.nn.softmax(a)))
 print(sess.run(tf.nn.softmax(a)))
 [ 0.0320586   0.08714432  0.23688284  0.64391428]
 ```
+### tf.nn.softmax_cross_entopy Vs the method based on tf.nn.softmax 
 
-[**softmax_cross_entropy**](https://stackoverflow.com/questions/34240703/difference-between-tensorflow-tf-nn-softmax-and-tf-nn-softmax-cross-entropy-with) equal to:
-```
-y_hat_softmax = tf.nn.softmax(y_hat)
-total_loss = tf.reduce_mean(-tf.reduce_sum(y_true * tf.log(y_hat_softmax), [1]))
-
-```
-we can verify it through a Experiment
 ```
 import tensorflow as tf
 import numpy as np
@@ -173,7 +186,12 @@ Out[35]:
 0.83934333897877944
 
 ```
-The same result
+[**softmax_cross_entropy**](https://stackoverflow.com/questions/34240703/difference-between-tensorflow-tf-nn-softmax-and-tf-nn-softmax-cross-entropy-with)
+just can be interpreted as follows:
+```
+y_hat_softmax = tf.nn.softmax(y_hat)
+total_loss = tf.reduce_mean(-tf.reduce_sum(y_true * tf.log(y_hat_softmax), [1]))
+```
 ```
 loss_per_instance_2 = tf.nn.softmax_cross_entropy_with_logits(logits=y_hat, labels=y_true)
 sess.run(loss_per_instance_2)
