@@ -38,7 +38,8 @@ tf.contrib.layers.unit_norm                    --->  Normalizes the given input 
 tf.contrib.layers.embed_sequence
 tf.contrib.layers.safe_embedding_lookup_sparse --->  Vacabulary aspect
 ```
-For conv2d, the parameters like the following:
+### tf.contrib.layers.conv2d
+the parameters like the following:
 ```
 conv2d(
     # convolution related setting
@@ -69,7 +70,7 @@ conv2d(
     scope=None
 )
 ```
-**tf.contrib.layers.fully_connected**
+### tf.contrib.layers.fully_connected
 ```
 fully_connected(
     inputs,
@@ -89,12 +90,44 @@ fully_connected(
 )
 
 ```
-Equal to:
+when given the normalizer_fn and activation_fn, the fully_connected works like below:
 ```
-tf.nn.dense()
-tf.nn.relu()
-tf.nn.batch_normlize()
-...
+- Fully-connected
+- ReLU
+- BN
+```
+
+### tf.contrib.layers.batch_norm
+can be used as a normalizer function for conv2d and fully connected
+```
+batch_norm(
+    inputs,                                           ---> A tensor with 2 or more dimensions, where the first dimension has batch_size
+                                                           The normalization is over all but the last dimension if NHWC
+                                                           and the second dimension if NCHW 
+                                                           
+    decay=0.999,                                      ---> Decay for the moving average
+    center=True,                                      ---> Add offset of belta if True
+    scale=False,                                      ---> Mutiply by gamma if True
+    epsilon=0.001,                                    ---> Small float add to variance
+    activation_fn=None,
+    param_initializers=None,
+    param_regularizers=None,
+    updates_collections=tf.GraphKeys.UPDATE_OPS,
+    is_training=True,                                 ---> Whether or not the layer in training mode
+    reuse=None,                    
+    variables_collections=None,
+    outputs_collections=None,
+    trainable=True,
+    batch_weights=None,
+    fused=False,                                      ---> use a faster,fused implementation based on nn.fused_batch_norm.
+    data_format=DATA_FORMAT_NHWC,
+    zero_debias_moving_mean=False,
+    scope=None,
+    renorm=False,
+    renorm_clipping=None,
+    renorm_decay=0.99
+)
+
 ```
 
 ## Regularizers
