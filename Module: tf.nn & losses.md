@@ -4,6 +4,7 @@ Neural network support
 # Functions
 
 ## Pooling ,CNN and Normalization 
+SUMMARY 
 ```
 all_candidate_sampler
 atrous_conv2d                            ---> Atrous convolution(a.k.a. convolution with holes or dilated convolution)
@@ -53,11 +54,43 @@ conv2d(
     name=None
 )
 ```
+### tf.nn.avg_pool
+perform the average pooling on the input
+```
+avg_pool(
+    value,                              ---> A 4-D tensor of shape:[batch, height, width, channels]
+    ksize,                              ---> A list of ints that has length >=4; 
+                                             the size of the window for each dimension of input tensor
+    strides,                            ---> A list of ints that has length >=4;
+                                             the stride of the sliding window for each dimension of input tensor
+    padding,                            ---> A string, either "SAME" or "VALID "
+    data_format='NHWC',                 ---> A string
+    name=None
+)
+
+```
+
+### tf.nn.dropout
+compute dropout
+
+With probability keep_prob, outputs will be scaled up by 1/ keep_prob, otherwise output 0, this scaling is so that the expect sum
+is unchanged.
+```
+dropout(
+    x,                                 ---> A tensor
+    keep_prob,                         ---> A scalar Tensor, the probability that each element is kept
+    noise_shape=None,                  
+    seed=None,
+    name=None
+)
+
+
+```
 
 
 
 
-### Activation function 
+## Activation function 
 ```
 xw_plus_b                                --->  Computes matmul(x, weights) + biases.
 relu_layer                               ---> Computes Relu(x * weight + biases).
@@ -75,7 +108,7 @@ softsign                                 ---> Computes softsign: features / (abs
 dropout                                  ---> Computes dropout
 ```
 
-### RNN AND EMBEDDING AND SAMPLER 
+## RNN AND EMBEDDING AND SAMPLER 
 ```
 static_bidirectional_rnn
 static_rnn
@@ -103,7 +136,7 @@ learned_unigram_candidate_sampler
 log_uniform_candidate_sampler
 lrn
 ```
-### Loss function
+## Loss function
 ```
 sigmoid_cross_entropy_with_logits        ---> Computes sigmoid cross entropy given logits.
 softmax_cross_entropy_with_logits        ---> Computes softmax cross entropy between logits and labels.
@@ -206,7 +239,7 @@ Out[39]:
 ```
 
 
-## sigmoid
+### sigmoid
 tf.nn.sigmoid_cross_entropy_with_logits
 ```
 sigmoid_cross_entropy_with_logits(
@@ -238,7 +271,7 @@ max(x, 0) - x * z + log(1 + exp(-abs(x)))
 logits and labels must have the same type and shape.
 ```
 
-## Module: tf.losses
+# Module: tf.losses
 Losses operation for use in neural networks
 Fuctions:
 ```
