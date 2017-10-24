@@ -10,6 +10,7 @@ tf.reset_default_graph()                  ---> Clears the default graph st
 tf.get_variable_scope()                   ---> Retrieve the current scope
 tf.get_variable_scope.reuse_variables()   ---> Set reuse flag to be true
 ```
+
 ## Necessity
 ```
 import tensorflow as tf
