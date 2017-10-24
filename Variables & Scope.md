@@ -87,7 +87,6 @@ __init__(
 )
 ```
 
-
 # Sharing variables and variable_scope
 --------------------------------------------------------------------------------------------
 Today, we will talk something about sharing variables . It can be a very complex problem,however ,it is actually neccessary to know that,for when building complex models , you ofen need to share large of variables and you might want to initialize all of them in one place
@@ -99,6 +98,35 @@ tf.get_variable                           ---> Create new variables or reusing v
 tf.reset_default_graph()                  ---> Clears the default graph stack and resets the global default graph
 tf.get_variable_scope()                   ---> Retrieve the current scope
 tf.get_variable_scope.reuse_variables()   ---> Set reuse flag to be true
+```
+### tf.get_variable
+Gets an existing variable with these parameters
+or create a new one
+
+```
+get_variable(
+    name,
+    shape=None,
+    dtype=None,
+    initializer=None,
+    regularizer=None,
+    trainable=True,
+    collections=None,
+    caching_device=None,
+    partitioner=None,
+    validate_shape=True,
+    use_resource=None,
+    custom_getter=None
+)
+
+```
+The function prefixes the name with current variable scope and perform reuse checks
+```
+with tf.variable_scope("foo"):
+    v = tf.get_variable("v", [1])  # v.name == "foo/v:0"
+    w = tf.get_variable("w", [1])  # w.name == "foo/w:0"
+with tf.variable_scope("foo", reuse=True):
+    v1 = tf.get_variable("v")  # The same as v above.
 ```
 
 ## Necessity
