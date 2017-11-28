@@ -93,8 +93,18 @@ fully_connected(
 when given the normalizer_fn and activation_fn, the fully_connected works like below:
 ```
 - Fully-connected
-- ReLU
 - BN
+- Activation
+
+original code:
+# Apply normalizer function / layer.
+    if normalizer_fn is not None:
+      if not normalizer_params:
+        normalizer_params = {}
+      outputs = normalizer_fn(outputs, **normalizer_params)
+
+    if activation_fn is not None:
+      outputs = activation_fn(outputs)
 ```
 
 ### tf.contrib.layers.batch_norm
