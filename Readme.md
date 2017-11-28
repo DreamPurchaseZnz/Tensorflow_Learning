@@ -95,8 +95,9 @@ when given the normalizer_fn and activation_fn, the fully_connected works like b
 - Fully-connected
 - BN
 - Activation
-
+```
 original code:
+```
 # Apply normalizer function / layer.
     if normalizer_fn is not None:
       if not normalizer_params:
