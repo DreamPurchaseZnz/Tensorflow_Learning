@@ -19,3 +19,13 @@ __le__ (binary <=)
 __gt__ (binary >)
 __ge__ (binary >=)
 ```
+
+## Slicing and Joining
+```
+tf.stack(
+    values,              ---> Packs the list of tensors in values into a tensor with rank 
+                              one higher than each tensor in values
+    axis=0,
+    name='stack'
+)
+```
