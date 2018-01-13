@@ -5,17 +5,25 @@ placeholder(
     shape=None,
     name=None
 )
+
+constant(
+    value,                    ---> not a tensor, specific value
+    dtype=None,
+    shape=None,
+    name='Const',
+    verify_shape=False
+)
 ```
 Insert a placeholder for a tensor that will be always fed
 ```
-x = tf.placeholder(tf.float32, shape=(1024, 1024))
+x = tf.placeholder(tf.float32, shape=(2, 2))
 y = tf.matmul(x, x)
 
 with tf.Session() as sess:
   print(sess.run(y))  # ERROR: will fail because x was not fed.
-
-  rand_array = np.random.rand(1024, 1024)
-  print(sess.run(y, feed_dict={x: rand_array}))  # Will succeed.
+  print(sess.run(y, feed_dict={x: [[1,2],[1,3]]}))  # Will succeed.
+[[  3.   8.]
+ [  4.  11.]]
 
 ```
 return a tensor that may be used as a handle for feeding a value, but not evaluated directly
@@ -24,25 +32,33 @@ return a tensor that may be used as a handle for feeding a value, but not evalua
 a variable maintains state in the graph across calls to run()
 the Variable constructor requires an initial value for the variable, After construction the type and shape are fixed
 ,The value can be changed using one of the assign methods.
-
+```
+tf.Variable(<initial-value>, name=<optional-name>)
+```
 variable can be used as inputs of other Ops in graph
 ```
 import tensorflow as tf
-
 # Create a variable.
-w = tf.Variable(<initial-value>, name=<optional-name>)
+w = tf.Variable(tf.random_normal((2,3)), name='W')
+x = tf.constant([[1,2],[3,4],[5,6]])
+z = tf.matmul(w,x)
+
+TypeError: Input 'b' of 'MatMul' Op has type int32 that does not match type float32 of argument 'a'.
+
+x = tf.constant([[1,2],[3,4],[5,6]],dtype=tf.float32) # add data type information
 
 # Use the variable in the graph like any Tensor.
-y = tf.matmul(w, ...another variable or tensor...)
-
-# The overloaded operators are available too.
-z = tf.sigmoid(w + y)
+z = tf.matmul(w,x)
 
 # Assign a new value to the variable with `assign()` or a related method.
-w.assign(w + 1.0)
-w.assign_add(1.0)
+w.assign(w+1.0)
+Out[161]: 
+<tf.Tensor 'Assign:0' shape=(2, 3) dtype=float32_ref>
 
 ```
+
+
+
 Variables **have to be explicitly initialized** before you run Ops that use their value by:
 * running it initializer Op
 * restoring the variable from a save file
@@ -52,8 +68,12 @@ Variables **have to be explicitly initialized** before you run Ops that use thei
 with tf.Session() as sess:
     # Run the variable initializer.
     sess.run(w.initializer)
+    print(sess.run(w))
     # ...you now can run ops that use the value of 'w'...
+[[ 0.4880335   0.07506625  2.16401887]
+ [ 0.32055953 -0.2380942  -0.56767261]]
 ```
+
 The most common initialization pattern is to use the convenience function global_variables_initializer() 
 that initializes all the variables.
 ```
@@ -65,6 +85,9 @@ with tf.Session() as sess:
     # Run the Op that initializes global variables.
     sess.run(init_op)
     # ...you can now run any Op that uses variable values...
+    print(sess.run(w))
+[[-1.39853573  1.05518651  0.23997593]
+ [ 0.98568857 -0.71756804 -1.31912315]]
 
 ```
 All variables are automatically collected in the graph. The graph collection *GraphKeys.GLOBAL_VARIABLES*.
@@ -128,7 +151,12 @@ with tf.variable_scope("foo"):
 with tf.variable_scope("foo", reuse=True):
     v1 = tf.get_variable("v")  # The same as v above.
 ```
+```
+v1
+Out[181]: 
+<tf.Variable 'foo/v:0' shape=(1,) dtype=float32_ref>
 
+```
 ## Necessity
 ```
 import tensorflow as tf
@@ -223,7 +251,7 @@ assert v1 is v
 The primary function of variable scope is to carry a name that will be used as **prefix** for variables names and a **reuse-flag** to distinguish the two cases discribed above. 
 nesting variable scopes append their names in a way analogous to how directories work
 
-the current scope can be **retieved** by using tf.get_variable_scope 
+the current scope can be **recieved** by using tf.get_variable_scope 
 and a reuse flag can be set to **True** by tf.get_variable_scope.reuse_variables()
 ```
 with tf.variable_scope("foo"):
