@@ -1,3 +1,74 @@
+# Variable 
+## variable 
+```
+tf.Variable
+```
+## variable helper functions
+provide  a set of functions to help manage the set of variables collected in the graph
+```
+tf.global_variables                                  
+tf.local_variables      
+tf.model_variables
+tf.trainable_variables
+tf.moving_average_variables
+tf.global_variables_initializer
+tf.local_variables_initializer
+tf.variables_initializer
+tf.is_variable_initialized
+tf.report_uninitialized_variables
+tf.assert_variables_initialized
+tf.assign
+tf.assign_add
+tf.assign_sub   
+```
+## Saving and Restore variables
+```
+tf.train.Saver
+tf.train.latest_checkpoint
+tf.train.get_checkpoint_state
+tf.train.update_checkpoint_state
+```
+## Sharing Variables
+Create variables contingent on certain conditions
+```
+tf.get_variable
+tf.get_local_variable
+tf.VariableScope
+tf.variable_scope
+tf.variable_op_scope
+tf.get_variable_scope
+tf.make_template
+tf.no_regularizer
+tf.constant_initializer
+tf.random_normal_initializer
+tf.truncated_normal_initializer
+tf.random_uniform_initializer
+tf.uniform_unit_scaling_initializer
+tf.zeros_initializer
+tf.ones_initializer
+tf.orthogonal_initializer
+```
+## Variable Partitioners for Sharding
+```
+tf.fixed_size_partitioner
+tf.variable_axis_size_partitioner
+tf.min_max_variable_partitioner
+```
+## Sparse Variable Updates
+```
+tf.IndexedSlices
+```
+## Read-only Lookup Tables
+```
+tf.initialize_all_tables
+tf.tables_initializer
+```
+## Exporting and Importing Meta Graphs
+```
+tf.train.export_meta_graph
+tf.train.import_meta_graph
+```
+
 # tf.Placeholder
 ```
 placeholder(
