@@ -197,6 +197,32 @@ It's very useful to use initializers such as xavier_initializer:
 W = tf.get_variable("W", shape=[784, 256],
        initializer=tf.contrib.layers.xavier_initializer())
 ```
+There is a limit in the initialization. you can not use the higher lever operation, for example,xavier. but you can just create it.
+and there is no more ExeptionError raised.
+```
+with tf.variable_scope('op'):
+    conv1_biases = tf.Variable(tf.zeros([32]), name="conv1_biases")
+    conv2_biases = tf.Variable(tf.zeros([32]), name="conv1_biases")
+    
+conv1_biases
+Out[13]: 
+<tf.Variable 'op_1/conv1_biases:0' shape=(32,) dtype=float32_ref>
+conv2_biases
+Out[14]: 
+<tf.Variable 'op_1/conv1_biases_1:0' shape=(32,) dtype=float32_ref>
+```
+We face two choice for the tf.get_variable: weight share if reuse = true or raise a value error if reuse = False.
+So how to change the situation. First same scope different variable name or different scope same name.
+```
+with tf.variable_scope('op'):
+    conv1_biases = tf.get_variable(name="conv1_biases", shape=[32],
+                                   initializer=tf.contrib.layers.variance_scaling_initializer())
+    conv2_biases = tf.get_variable(name="conv1_biases", shape=[32],
+                                   initializer=tf.contrib.layers.variance_scaling_initializer())
+ValueError: Variable op/conv1_biases already exists, disallowed. Did you mean to set reuse=True in VarScope? Originally defined at:
+
+```
+
 
 # Sharing variables and variable_scope
 --------------------------------------------------------------------------------------------
