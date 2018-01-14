@@ -380,8 +380,12 @@ with tf.variable_scope("foo"):
     with tf.variable_scope("bar"):
         v = tf.get_variable("v", [1])
 assert v.name == "foo/bar/v:0"
+v
+Out[14]: 
+<tf.Variable 'foo/bar/v:0' shape=(1,) dtype=float32_ref>
 
 with tf.variable_scope("foo"):
+    v = tf.get_variable("v", [1])
     tf.get_variable_scope().reuse_variables()
     v1 = tf.get_variable("v", [1])
 assert v1 is v
@@ -418,6 +422,15 @@ tf.reset_default_graph()
 with tf.variable_scope("foo"):
     x = 1.0 + tf.get_variable("v", [1])
 assert x.op.name == "foo/add"
+```
+```
+x
+Out[22]: 
+<tf.Tensor 'foo/add:0' shape=(1,) dtype=float32>
+x.op.name
+Out[23]: 
+'foo/add'
+`
 ```
 
 how do we just build the graph and automatically retrieve the parameters?
