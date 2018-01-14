@@ -432,6 +432,39 @@ Out[23]:
 'foo/add'
 `
 ```
+Variable_scope implicitly opening name_scope. Creating a variable in a name_scope automatically expands its name with the scope name as well.
+Now you see that tf.variable_scope() adds a prefix to the names of all variables (no matter how you create them), ops, constants. On the other hand tf.name_scope() ignores variables created with tf.get_variable(). 
+```
+import tensorflow as tf
+def scoping(fn, scope1, scope2, vals):
+    with fn(scope1):
+        a = tf.Variable(vals[0], name='a')
+        b = tf.get_variable('b', initializer=vals[1])
+        c = tf.constant(vals[2], name='c')
+        with fn(scope2):
+            d = tf.add(a * b, c, name='res')
+        print('\n  '.join([scope1, a.name, b.name, c.name, d.name]), '\n')
+    return d
+d1 = scoping(tf.variable_scope, 'scope_vars', 'res', [1, 2, 3])
+d2 = scoping(tf.name_scope,     'scope_name', 'res', [1, 2, 3])
+with tf.Session() as sess:
+    writer = tf.summary.FileWriter('logs', sess.graph)
+    sess.run(tf.global_variables_initializer())
+    print(sess.run([d1, d2]))
+    writer.close()
+```
+```
+scope_vars
+  scope_vars/a:0
+  scope_vars/b:0
+  scope_vars/c:0
+  scope_vars/res/res:0 
+scope_name
+  scope_name/a:0
+  b:0                                 ---> get_variables is not in the name_scope.
+  scope_name/c:0
+  scope_name/res/res:0 
+```
 
 how do we just build the graph and automatically retrieve the parameters?
 ----------------------------------------------------------------------------------------------------------------------
