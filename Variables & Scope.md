@@ -250,6 +250,28 @@ img1 = tf.placeholder(tf.float32,shape=(100,32,32,32))
 result1 = my_image_filter(img1)
 result2 = my_image_filter(img1)
 ```
+```
+tf.trainable_variables()
+Out[10]: 
+[# group1
+<tf.Variable 'conv1_weights:0' shape=(5, 5, 32, 32) dtype=float32_ref>,
+ <tf.Variable 'conv1_biases:0' shape=(32,) dtype=float32_ref>,
+ <tf.Variable 'conv2_weights:0' shape=(5, 5, 32, 32) dtype=float32_ref>,
+ <tf.Variable 'conv2_biases:0' shape=(32,) dtype=float32_ref>,
+ # group2
+ <tf.Variable 'conv1_weights_1:0' shape=(5, 5, 32, 32) dtype=float32_ref>,
+ <tf.Variable 'conv1_biases_1:0' shape=(32,) dtype=float32_ref>,
+ <tf.Variable 'conv2_weights_1:0' shape=(5, 5, 32, 32) dtype=float32_ref>,
+ <tf.Variable 'conv2_biases_1:0' shape=(32,) dtype=float32_ref>]
+```
+Here, we would like to know how tensorflow name tensors, the general rules is descriped as following:
+```
+1. the name of the operation that produce it
+2. the colon(:), and
+3. the index of that tensor in outputs of operation that produced it.
+```
+All tensors are derived from some operation, and operations are either given a name in the constructor, or given the default name for a particular kind of operation. If the name is not unique, TensorFlow automatically handles this by appending "_1", "_2" etc. An operation with n tensor outputs name these tensors "op_name:0", "op_name:1", ..., "op_name:n-1"
+
 **Problem** is that you call my_image_filter twice,but this will create two sets of variables,4 variable in each one, for a total of 8 variables,there is a solution, tedious but efficent ,by using variable_dict.
 ```
 variables_dict = {
