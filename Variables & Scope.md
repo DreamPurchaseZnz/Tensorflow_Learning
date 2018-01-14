@@ -331,7 +331,8 @@ So More general solution have been proposed by using Variable Scope mechanism th
 
     img1 = tf.placeholder(tf.float32,shape=(100,32,32,32))
     result1 = my_image_filter(img1)
-    result2 = my_image_filter(img1) # it will raise a error that (Variable conv1/weights already exists, disallowed...)
+    result2 = my_image_filter(img1) # it will raise a error that 
+             (Variable conv1/weights already exists, disallowed...)
 ```
 ```
 ValueError: Variable conv1/weights already exists, disallowed. Did you mean to set reuse=True in VarScope? 
@@ -351,11 +352,23 @@ with tf.variable_scope("foo"):
     v = tf.get_variable("v", [1])
 assert v.name == "foo/v:0"
 ```
+```
+v
+Out[10]: 
+<tf.Variable 'foo/v:0' shape=(1,) dtype=float32_ref>
+
+```
 * case 2 : The scope is set for reusing variables as evidenced by tf.get_variable_scope.reuse()=True
 ```
 with tf.variable_scope("foo", reuse=True):
     v1 = tf.get_variable("v", [1])
 assert v1 is v
+```
+```
+v1
+Out[12]: 
+<tf.Variable 'foo/v:0' shape=(1,) dtype=float32_ref>
+
 ```
 The primary function of variable scope is to carry a name that will be used as **prefix** for variables names and a **reuse-flag** to distinguish the two cases discribed above. 
 nesting variable scopes append their names in a way analogous to how directories work
