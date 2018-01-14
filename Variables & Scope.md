@@ -274,6 +274,7 @@ All tensors are derived from some operation, and operations are either given a n
 
 **Problem** is that you call my_image_filter twice,but this will create two sets of variables,4 variable in each one, for a total of 8 variables,there is a solution, tedious but efficent ,by using variable_dict.
 ```
+import tensorflow as tf
 variables_dict = {
     "conv1_weights": tf.Variable(tf.random_normal([5, 5, 32, 32]),name="conv1_weights"),
     "conv1_biases": tf.Variable(tf.zeros([32]), name="conv1_biases"),
@@ -289,9 +290,19 @@ def my_image_filter(input_images, variables_dict):
         strides=[1, 1, 1, 1], padding='SAME')
     return tf.nn.relu(conv2 + variables_dict['conv2_biases'])
     
- # Both calls to my_image_filter() now use the same variables
+# Both calls to my_image_filter() now use the same variables
+img1 = tf.placeholder(tf.float32,shape=(100,32,32,32))
 result1 = my_image_filter(img1, variables_dict)
 result2 = my_image_filter(img1, variables_dict)
+```
+```
+tf.trainable_variables()
+Out[3]: 
+[<tf.Variable 'conv1_weights:0' shape=(5, 5, 32, 32) dtype=float32_ref>,
+ <tf.Variable 'conv1_biases:0' shape=(32,) dtype=float32_ref>,
+ <tf.Variable 'conv2_weights:0' shape=(5, 5, 32, 32) dtype=float32_ref>,
+ <tf.Variable 'conv2_biases:0' shape=(32,) dtype=float32_ref>]
+
 ```
 With convenient ,creating varibles like above ,outside of the code,breaks encapsulation
 * the code builds graph must document the names ,shapes of variable to create.
