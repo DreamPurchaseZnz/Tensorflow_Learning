@@ -1,4 +1,4 @@
-# Variable 
+# Variable
 ## variable 
 ```
 tf.Variable
@@ -180,6 +180,23 @@ __init__(
     import_scope=None
 )
 ```
+## tf.Variable Vs tf.get_variable 
+the difference between the above two method is that *tf.variable* is the default operation for making a variable and *get_variable*
+is mainly used for weight sharing.  
+tf.Variable.\__init\__: Creates a new variable with initial_value.
+```
+W = tf.Variable(<initial-value>, name=<optional-name>)
+```
+tf.get_variable: Gets an existing variable with these parameters or create a new one. You can also use initializer.
+```
+W = tf.get_variable(name, shape=None, dtype=tf.float32, initializer=None,
+       regularizer=None, trainable=True, collections=None)
+```
+It's very useful to use initializers such as xavier_initializer:
+```
+W = tf.get_variable("W", shape=[784, 256],
+       initializer=tf.contrib.layers.xavier_initializer())
+```
 
 # Sharing variables and variable_scope
 --------------------------------------------------------------------------------------------
@@ -193,7 +210,7 @@ tf.reset_default_graph()                  ---> Clears the default graph st
 tf.get_variable_scope()                   ---> Retrieve the current scope
 tf.get_variable_scope.reuse_variables()   ---> Set reuse flag to be true
 ```
-### tf.get_variable
+## tf.get_variable
 Gets an existing variable with these parameters
 or create a new one
 
@@ -226,8 +243,8 @@ with tf.variable_scope("foo", reuse=True):
 v1
 Out[181]: 
 <tf.Variable 'foo/v:0' shape=(1,) dtype=float32_ref>
-
 ```
+
 ## Necessity
 ```
 import tensorflow as tf
