@@ -70,7 +70,7 @@ print(sess.run(var2))
 conditional is evaluated.
 ```
 tf.cond(
-    pred,                                 ---> true_fn if pred is true else false_fn
+    pred,                                 ---> tf.bool type, not the python bool
     true_fn=None,
     false_fn=None,
     strict=False,
@@ -79,7 +79,10 @@ tf.cond(
     fn2=None
 )
 ```
-
+we can use *tf.cast* to convert the type.
+```
+Try tf.cast(is_training, tf.bool)
+```
 ```
 pred = tf.placeholder(tf.bool, shape=[])
 x = tf.Variable([1])
