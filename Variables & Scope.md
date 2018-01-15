@@ -21,6 +21,30 @@ tf.assign
 tf.assign_add
 tf.assign_sub   
 ```
+tf.assign update 'ref' by assigning 'value' to it. We must highlight that tf.assign is an operation, used to reset value.
+```
+assign(
+    ref,
+    value,
+    validate_shape=None,
+    use_locking=None,
+    name=None
+)
+
+```
+```
+import tensorflow as tf
+var = tf.Variable(0.9)
+sess = tf.Session()
+sess.run(tf.global_variables_initializer())
+print(sess.run(var2))
+0.9
+op = tf.assign(var, 2)
+sess.run(op)
+print(sess.run(var))
+2.0
+```
+
 ## Saving and Restore variables
 ```
 tf.train.Saver
