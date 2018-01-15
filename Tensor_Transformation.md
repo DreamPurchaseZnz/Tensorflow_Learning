@@ -94,6 +94,13 @@ tf.stack(
     name='stack'
 )
 ```
+```
+concat(
+    values,
+    axis,
+    name='concat'
+)
+```
 ## Fake quantization
 Operation used to help training for better quantization accuracy
 ```
