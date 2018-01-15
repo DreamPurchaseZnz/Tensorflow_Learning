@@ -12,6 +12,13 @@ tf.cast
 tf.bitcast
 tf.saturate_cast
 ```
+```
+cast(
+    x,
+    dtype,
+    name=None
+)
+```
 ## Shape and Shaping
 U can use to determine the shape of tensor and change the shape of a tensor
 ```
