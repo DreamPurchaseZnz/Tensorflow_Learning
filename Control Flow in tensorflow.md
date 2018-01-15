@@ -28,7 +28,9 @@ deep copy:
 ```
 tensor = tf.identity(var)
 ```
-deep copy: create another variable and set its value to the value currently stored in a variable
+deep copy
+> create another variable and set its value to the value currently stored in a variable
+
 ```
 tensor = tf.Variable(<inital>)
 tensor = tensor.assign(var)               ---> equal to tf.assign(ref, value)
