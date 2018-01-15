@@ -509,8 +509,8 @@ scope_name
   scope_name/res/res:0 
 ```
 
-how do we just build the graph and automatically retrieve the parameters?
-----------------------------------------------------------------------------------------------------------------------
+# How do we just build the graph and automatically retrieve the parameters?
+
 Building graph is discussed above and the following is for optimizer
 ## Necessity
 As talking above, it is good to use variable_dict but not the best.In more complex model,such as four convolutional layer and three dense layers, it has to build every variable for each layer, it is a hard work. So how do we just build the graph and automatically retrieve the parameters? here is a good example.
@@ -547,6 +547,11 @@ REGULARIZATION_LOSSES:
 WEIGHTS:
 BIASES:
 ACTIVATIONS: 
+```
+There are two ways to debug your code:
+```
+tf.trainable_variables()                                                ---> List all variables
+tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope='NAME')       ---> List the variables which belong to particular scope
 ```
 
 
