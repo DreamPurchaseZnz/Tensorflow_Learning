@@ -104,7 +104,32 @@ Out[69]:
 array([[0, 4, 3],
        [2, 1, 5]])
 ```
+A little further.
+```
+a = np.array([[[1,2],[3,4]],[[5,6],[7,8]]])
+a[2,2,2]
+Out[117]: 
+array([[[1, 2],
+        [3, 4]],
+       [[5, 6],
+        [7, 8]]])
+a.reshape([2,4])
+Out[118]: 
+array([[1, 2, 3, 4],
+       [5, 6, 7, 8]])
 
+a.reshape(1,8,1)
+Out[119]: 
+array([[[1],
+        [2],
+        [3],
+        [4],
+        [5],
+        [6],
+        [7],
+        [8]]])
+
+```
 
 ## Slicing and Joining
 Slice or extract parts of tensor, join multiple tensors together
@@ -227,8 +252,28 @@ Out[35]:
 <tf.Tensor 'concat:0' shape=(64, 32, 32, 128) dtype=float32>
 ```
 I guess, there will be a more simple method rather than the method above.
-for example *tf.reshape* method
-
+for example *tf.reshape* method, because the experiment is hard to implement on the tensorflow platform, so I use numpy to 
+verify if the *reshape* function work well.
+```
+var = np.random.random([2,64,32,32,64])
+var1 = np.split(var, 2)
+var2 = [np.squeeze(x) for x in var]
+var3 = np.concatenate(var2, axis=-1)
+var3.shape
+Out[112]: 
+(64, 32, 32, 128)
+var4 = np.reshape(var, [64,32,32,128])
+var4.shape
+Out[114]: 
+(64, 32, 32, 128)
+np.any(var3 == var4)
+Out[115]: 
+True
+```
+so the *reshape* method greatly simplify the code in this case:
+```
+reshape = split + squeeze + concatenate
+```
 ## Fake quantization
 Operation used to help training for better quantization accuracy
 ```
