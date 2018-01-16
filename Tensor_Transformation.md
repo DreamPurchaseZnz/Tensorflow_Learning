@@ -53,27 +53,22 @@ expand_dims(
 ```
 ```
 var = tf.Variable([[1,2],[3,4]])
-var
-Out[4]: 
+var Out[4]: 
 <tf.Variable 'Variable:0' shape=(2, 2) dtype=int32_ref>
 var1 = tf.expand_dims(var, [0,2])
 ValueError: 'dim' input must be a tensor with a single value for 'ExpandDims'
 
 var1 = tf.expand_dims(var, [0])
-var1
-Out[7]: 
+var1 Out[7]: 
 <tf.Tensor 'ExpandDims_1:0' shape=(1, 2, 2) dtype=int32>
 var2 = tf.expand_dims(var1, 3)
-var2
-Out[9]: 
+var2 Out[9]: 
 <tf.Tensor 'ExpandDims_2:0' shape=(1, 2, 2, 1) dtype=int32>
 var3 = tf.expand_dims(var2, 0)
-var3
-Out[11]: 
+var3 Out[11]: 
 <tf.Tensor 'ExpandDims_3:0' shape=(1, 1, 2, 2, 1) dtype=int32>
 var4 = tf.squeeze(var3, 0)
-var4
-Out[13]: 
+var4 Out[13]: 
 <tf.Tensor 'Squeeze:0' shape=(1, 2, 2, 1) dtype=int32>
 ```
 
