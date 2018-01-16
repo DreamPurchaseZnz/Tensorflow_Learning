@@ -16,8 +16,7 @@ tf.saturate_cast
 cast(
     x,
     dtype,
-    name=None
-)
+    name=None)
 ```
 ## Shape and Shaping
 U can use to determine the shape of tensor and change the shape of a tensor
@@ -46,6 +45,49 @@ a2.shape
 (5, 1, 1, 1)
 (a2*b).shape
 (5, 28, 28, 1)
+```
+Removes dimensions of size 1 from the shape of a tensor
+```
+squeeze(
+    input,
+    axis=None,             ---> you can remove the specific size 1 demensions by specific axis
+    name=None,
+    squeeze_dims=None)
+```
+Insert a dimension of 1 into tensor's shape at dimension index axis of the input shape.start from 0, if negative, count backward from the end.
+```
+expand_dims(
+    input,
+    axis=None,             ---> Scalar; Specifies the dimension index at which to expand the shape of input.
+                                Must be in the range [-rank(input) - 1, rank(input)]
+    name=None,
+    dim=None)
+
+```
+```
+var = tf.Variable([[1,2],[3,4]])
+var
+Out[4]: 
+<tf.Variable 'Variable:0' shape=(2, 2) dtype=int32_ref>
+var1 = tf.expand_dims(var, [0,2])
+ValueError: 'dim' input must be a tensor with a single value for 'ExpandDims'
+
+var1 = tf.expand_dims(var, [0])
+var1
+Out[7]: 
+<tf.Tensor 'ExpandDims_1:0' shape=(1, 2, 2) dtype=int32>
+var2 = tf.expand_dims(var1, 3)
+var2
+Out[9]: 
+<tf.Tensor 'ExpandDims_2:0' shape=(1, 2, 2, 1) dtype=int32>
+var3 = tf.expand_dims(var2, 0)
+var3
+Out[11]: 
+<tf.Tensor 'ExpandDims_3:0' shape=(1, 1, 2, 2, 1) dtype=int32>
+var4 = tf.squeeze(var3, 0)
+var4
+Out[13]: 
+<tf.Tensor 'Squeeze:0' shape=(1, 2, 2, 1) dtype=int32>
 ```
 
 ## Slicing and Joining
@@ -91,16 +133,86 @@ tf.stack(
     values,              ---> Packs the list of tensors in values into a tensor with rank 
                               one higher than each tensor in values
     axis=0,
-    name='stack'
-)
+    name='stack')
 ```
 ```
 concat(
     values,
     axis,
-    name='concat'
-)
+    name='concat')
 ```
+```
+split(
+    value,
+    num_or_size_splits,
+    axis=0,
+    num=None,
+    name='split')
+
+```
+We can assume that there is one occcasion, we need drop some path in the graph. And we can do the following first.
+```
+var = tf.Variable(tf.random_normal([64, 32, 32, 64]))
+var = [var, var]
+var
+Out[38]: 
+[<tf.Variable 'Variable_2:0' shape=(64, 32, 32, 64) dtype=float32_ref>,
+ <tf.Variable 'Variable_2:0' shape=(64, 32, 32, 64) dtype=float32_ref>]
+var = tf.convert_to_tensor(var)
+var
+Out[40]: 
+<tf.Tensor 'packed:0' shape=(2, 64, 32, 32, 64) dtype=float32>
+Out[16]: 
+<tf.Variable 'Variable_1:0' shape=(2, 64, 32, 32, 64) dtype=float32_ref>
+```
+Then we need some mask 
+```
+num_columns = var.get_shape().as_list()[0]
+mask = tf.random_shuffle([True] + [False]*(num_columns-1))
+mask
+Out[44]: 
+<tf.Tensor 'RandomShuffle:0' shape=(2,) dtype=bool>
+tf.cast(mask, var.dtype)
+Out[45]: 
+<tf.Tensor 'Cast:0' shape=(2,) dtype=float32>
+mask = tf.cast(mask, var.dtype)
+var6 = tf.transpose(tf.multiply(tf.transpose(var), mask))
+var6
+Out[49]: 
+<tf.Tensor 'transpose_1:0' shape=(2, 64, 32, 32, 64) dtype=float32>
+```
+then we get the *Var6* which we need. besides, we need to multiply the var6 by factor to offset the drop effect.
+
+The following is the decoding part：
+```
+var1= tf.split(var, num_or_size_splits=1, axis=0)                                 ---> here, we can see the num has the priority
+var1
+Out[26]: 
+[<tf.Tensor 'split_4:0' shape=(2, 64, 32, 32, 64) dtype=float32>]
+var1= tf.split(var, num_or_size_splits=[1,1], axis=0)
+var1
+Out[28]: 
+[<tf.Tensor 'split_5:0' shape=(1, 64, 32, 32, 64) dtype=float32>,
+ <tf.Tensor 'split_5:1' shape=(1, 64, 32, 32, 64) dtype=float32>]
+
+var2 = tf.split(var,var.get_shape().as_list()[0],axis=0)
+var2
+Out[31]: 
+[<tf.Tensor 'split_6:0' shape=(1, 64, 32, 32, 64) dtype=float32>,
+ <tf.Tensor 'split_6:1' shape=(1, 64, 32, 32, 64) dtype=float32>]
+var3 = [tf.squeeze(tensor, 0) for tensor in var2]
+var3
+Out[33]: 
+[<tf.Tensor 'Squeeze_1:0' shape=(64, 32, 32, 64) dtype=float32>,
+ <tf.Tensor 'Squeeze_2:0' shape=(64, 32, 32, 64) dtype=float32>]
+var4 = tf.concat(var3, axis=-1)
+var4
+Out[35]: 
+<tf.Tensor 'concat:0' shape=(64, 32, 32, 128) dtype=float32>
+```
+I guess, there will be a more simple method rather than the method above.
+for example *tf.reshape* method
+
 ## Fake quantization
 Operation used to help training for better quantization accuracy
 ```
