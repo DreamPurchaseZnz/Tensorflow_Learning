@@ -104,7 +104,7 @@ Out[69]:
 array([[0, 4, 3],
        [2, 1, 5]])
 ```
-A little further.
+A little further, rivel process can be seen as a tree search from the root node to the leaf node then search the leaf node nearest, if done, go back to the nearest parent node and so on.
 ```
 a = np.array([[[1,2],[3,4]],[[5,6],[7,8]]])
 a[2,2,2]
