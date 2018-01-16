@@ -72,6 +72,40 @@ var4 Out[13]:
 <tf.Tensor 'Squeeze:0' shape=(1, 2, 2, 1) dtype=int32>
 ```
 
+
+*tf.resshape*  use a C-order(row-major order) which means to read/write the elements using C like index oder with the last axis index(position not increment) change the fastest, back to the first axis index change slowest. 
+
+thus, when it is called, the tensor values are fetched from tensor and placed into the output array in row major oder. Let's say you 
+have a array, for the tensor is not easily to see the value except you launch a session and initial the value
+```
+a = np.arange(6).reshape((3, 2)) # [0,1,2,3,4,5]
+a
+Out[65]: 
+array([[0, 1],
+       [2, 3],
+       [4, 5]])
+```
+You can think of reshaping as first raveling the array (using the given index order), then inserting the elements from the raveled array into the new array using the same kind of index ordering as was used for the raveling.
+```
+np.reshape(a, (2, 3))
+Out[66]: 
+array([[0, 1, 2],
+       [3, 4, 5]])
+np.reshape(np.ravel(a), (2, 3))
+Out[67]: 
+array([[0, 1, 2],
+       [3, 4, 5]])
+np.reshape(a, (2, 3), order='F')
+Out[68]: 
+array([[0, 4, 3],
+       [2, 1, 5]])
+np.reshape(np.ravel(a, order='F'), (2, 3), order='F')
+Out[69]: 
+array([[0, 4, 3],
+       [2, 1, 5]])
+```
+
+
 ## Slicing and Joining
 Slice or extract parts of tensor, join multiple tensors together
 ```
