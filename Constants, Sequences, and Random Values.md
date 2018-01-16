@@ -13,7 +13,11 @@ tf.constant
 tf.linspace
 tf.range
 ```
-
+Creates a sequence of numbers that begins at start and extends by increments of delta up to but not including limit.
+```
+range(limit, delta=1, dtype=None, name='range')
+range(start, limit, delta=1, dtype=None, name='range')
+```
 ## Random Tensor
 Create random tensors with different distributions. The random ops are stateful, and create new random values each time they are
 evaluated.
