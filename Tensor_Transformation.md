@@ -167,7 +167,7 @@ then we get the *Var6* which we need. besides, we need to multiply the var6 by f
 
 The following is the decoding part：
 ```
-var1= tf.split(var, num_or_size_splits=1, axis=0)                                 ---> here, we can see the num has the priority
+var1= tf.split(var, num_or_size_splits=1, axis=0)   ---> here, we can see the num has the priority
 var1
 Out[26]: 
 [<tf.Tensor 'split_4:0' shape=(2, 64, 32, 32, 64) dtype=float32>]
