@@ -32,20 +32,7 @@ tf.squeeze
 tf.expand_dims
 tf.meshgrid
 ```
-Brocasting: the next example first extended on the left with singleton dimensions  to become \[1, 1, 1, 15\]
-```
-a = np.ones((5,))
-b = np.ones((5, 28, 28, 1))
-(a*b).shape
-(5, 28, 28, 5)
-b.shape
-(5, 28, 28, 1)
-a2 = np.reshape(a, [len(a), 1,1,1])
-a2.shape
-(5, 1, 1, 1)
-(a2*b).shape
-(5, 28, 28, 1)
-```
+
 Removes dimensions of size 1 from the shape of a tensor
 ```
 squeeze(
@@ -176,7 +163,7 @@ tf.cast(mask, var.dtype)
 Out[45]: 
 <tf.Tensor 'Cast:0' shape=(2,) dtype=float32>
 mask = tf.cast(mask, var.dtype)
-var6 = tf.transpose(tf.multiply(tf.transpose(var), mask))
+var6 = tf.transpose(tf.multiply(tf.transpose(var), mask))      ---> Brocasting
 var6
 Out[49]: 
 <tf.Tensor 'transpose_1:0' shape=(2, 64, 32, 32, 64) dtype=float32>
