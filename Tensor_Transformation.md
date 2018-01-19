@@ -286,8 +286,8 @@ tf.fake_quant_with_min_max_vars_per_channel_gradient
 
 ```
 
-
-### The following operators are overloaded in the TensorFlow Python API:
+# Majic method
+## The following operators are overloaded in the TensorFlow Python API:
 ```
 __neg__ (unary -)
 __abs__ (abs())
