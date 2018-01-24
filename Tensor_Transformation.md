@@ -169,6 +169,12 @@ tf.quantize_v2
 tf.quantized_concat
 tf.setdiff1d
 ```
+### tile
+```
+tile = creation + breadcasting
+
+```
+### stack
 ```
 tf.stack(
     values,              ---> Packs the list of tensors in values into a tensor with rank 
@@ -176,12 +182,14 @@ tf.stack(
     axis=0,
     name='stack')
 ```
+### concat
 ```
 concat(
     values,
     axis,
     name='concat')
 ```
+### split
 ```
 split(
     value,
