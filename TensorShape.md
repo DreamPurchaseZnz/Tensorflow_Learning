@@ -44,7 +44,7 @@ If we want a tensorshape like the following:
 just do a try
 ```
 
-
+Error so just specify the batch size
 ```
 
 
