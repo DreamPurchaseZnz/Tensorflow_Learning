@@ -171,8 +171,12 @@ tf.setdiff1d
 ```
 ### tile
 ```
-tile = creation + breadcasting
-
+z = tf.reshape(z, [batch_size, 1, 1, latent_dim])
+z = tf.tile(z, [1, self._image_size, self._image_size, 1])
+```
+```
+z = tf.reshape(z, [batch_size, 1, 1, latent_dim])
+z = z * tf.ones_like(img)
 ```
 ### stack
 ```
