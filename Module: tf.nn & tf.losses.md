@@ -86,8 +86,49 @@ dropout(
 
 
 ```
+### tf.nn.conv2d_transpose
+```
+conv2d_transpose(
+    value,                           ---> A 4-D Tensor of type float and shape [batch, heigh, width, in_channels] for NHWC
+    filter,                          ---> shape [heigh, width, out_channels, in_channels],
+                                          filters' in channels must match that of the value
+    output_shape,                    ---> representing the output shape of the deconvolution op
+    strides,
+    padding='SAME',
+    data_format='NHWC',
+    name=None
+)
+```
+here is a practical code, where is wrong ?
+```
+def deconv2d(_input, kernel_size=3, out_shape=None,
+             strides=None, padding='SAME'):
+    """out_shape should be spacial size"""
+    if strides is None:
+        strides = [1, 1, 2, 1]
+    n, h, w, in_features = _input.get_shape().as_list()
+    filters = weight_variable_msra(
+        [1, kernel_size, in_features, in_features],                 ---> here out_filters = in_features
+        name='kernel')
+    if out_shape is None:
+        out_shape = tf.stack([n, 1, w * 2, in_features//2])         ---> by contrast, this indicates the out_filters is in_features//2
+    else:
+        out_shape = tf.stack([n, 1, out_shape[1], in_features//2])
+    return tf.nn.conv2d_transpose(_input, filters, out_shape, strides, padding=padding)
 
+```
+The graph can be established, however, when you use optimizer to optimize the function that consists of the *deconv2d*, it will 
+raise excertion that 
+```
+During handling of the above exception, another exception occurred:
 
+'gradients/decoder/decoder_section/block_7/up_block/conv2d_transpose_grad/Conv2D' (op: 'Conv2D') with input shapes: [64,1,15,64], [1,3,128,128].
+
+During handling of the above exception, another exception occurred:
+
+ValueError: Dimensions must be equal, but are 64 and 128 for 'gradients/decoder/decoder_section/block_7/up_block/conv2d_transpose_grad/Conv2D' (op: 'Conv2D') with input shapes: [64,1,15,64], [1,3,128,128].
+```
+So you cannot tell why it was wrong at first glance.
 
 
 ## Activation function 
