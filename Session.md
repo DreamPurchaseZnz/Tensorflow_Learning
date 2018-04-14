@@ -1,10 +1,35 @@
-# Testing module
+# Session and InteractiveSession
+The only difference with a regular Session is that an InteractiveSession installs itself as the default session on construction. The methods tf.Tensor.eval and tf.Operation.run will use that session to run ops.
+
+For example:
+```
+sess = tf.InteractiveSession()
+a = tf.constant(5.0)
+b = tf.constant(6.0)
+c = a * b
+# We can just use 'c.eval()' without passing 'sess'
+print(c.eval())
+sess.close()
+```
+Note that a regular session installs itself as default session when it is created with a statement
+```
+a = tf.constant(5.0)
+b = tf.constant(6.0)
+c = a * b
+with tf.Session():
+  # We can also use 'c.eval()' here.
+  print(c.eval())
+```
+
+## Session
 Most of time, we are confused when we just build a tensor graph or construct a operation. we do not know exactly what the tensor is. so
 this post just talking about how we can just uncover the mysterious veil. There are two usual operations. 
+
 ```
 sess.run                   ---> as function
 tensor.eval                ---> as attribute
 ```
+
 Before explain how to use it, we look at a simple example, first we define some variables,such as labels, var and so on.
 of course there are some usual function, like the *tf.one_hot* , which mean transfer the number to *one_hot* coding.
 ```
