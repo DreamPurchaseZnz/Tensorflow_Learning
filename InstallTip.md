@@ -22,3 +22,11 @@ Using Conda, however this deosn't work
 ```
 conda install -c r r-tensorflow
 ```
+
+## Path environment variable
+```
+C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v9.0\bin;
+C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v9.0\libnvvp;
+C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v9.0\lib\x64;
+```
+Restart the computer
