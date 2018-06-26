@@ -12,3 +12,13 @@ tensorflow_gpu-1.1.0	GPU	3.5	MSVC 2015 update 3	Cmake v3.6.3	5.1	8
 tensorflow-1.0.0	CPU	3.5	MSVC 2015 update 3	Cmake v3.6.3	N/A	N/A
 tensorflow_gpu-1.0.0	GPU	3.5	MSVC 2015 update 3	Cmake v3.6.3	5.1	8
 ```
+
+## Install Particular version
+Using Pip(Recommended)
+```
+pip install tensorflow-gpu==1.4.0
+```
+Using Conda, however this deosn't work 
+```
+conda install -c r r-tensorflow
+```
