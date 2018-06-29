@@ -69,7 +69,6 @@ tf.matrix_diag_part(input, name=None)
 tf.matrix_band_part(input, num_lower, num_upper, name=None)
 tf.matrix_set_diag(input, diagonal, name=None)
 tf.matrix_transpose(a, name='matrix_transpose')
-tf.matmul(a, b, transpose_a=False, transpose_b=False, adjoint_a=False, adjoint_b=False, a_is_sparse=False, b_is_sparse=False, name=None)
 tf.batch_matmul(x, y, adj_x=None, adj_y=None, name=None)
 tf.matrix_determinant(input, name=None)
 tf.matrix_inverse(input, adjoint=None, name=None)
@@ -82,6 +81,12 @@ tf.self_adjoint_eig(tensor, name=None)
 tf.self_adjoint_eigvals(tensor, name=None)
 tf.svd(tensor, full_matrices=False, compute_uv=True, name=None)
 ```
+### tf.matmul(a, b, transpose_a=False, transpose_b=False, adjoint_a=False, adjoint_b=False, a_is_sparse=False, b_is_sparse=False, name=None)
+Multiplies matrix a by matrix b, producing a * b.
+
+The inputs must, following any transpositions, be tensors of rank >= 2 where the inner 2 dimensions specify valid matrix multiplication arguments, and any further outer dimensions match.
+
+
 ## Complex Number Functions
 ```
 tf.complex(real, imag, name=None)
