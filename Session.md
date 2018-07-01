@@ -12,6 +12,7 @@ print(c.eval())
 sess.close()
 ```
 Note that a regular session installs itself as default session when it is created with a statement
+### Eval method
 ```
 a = tf.constant(5.0)
 b = tf.constant(6.0)
@@ -20,6 +21,15 @@ with tf.Session():
   # We can also use 'c.eval()' here.
   print(c.eval())
 ```
+### Run method
+```
+sess = tf.InteractiveSession()
+a = tf.constant([10, 20])
+b = tf.constant([1.0, 2.0])
+v = sess.run(a)                    # array([10, 20])
+v = sess.run([a, b])               # [array([10, 20]), array([1., 2.], dtype=float32)]
+```
+
 
 ## Session
 Most of time, we are confused when we just build a tensor graph or construct a operation. we do not know exactly what the tensor is. so
