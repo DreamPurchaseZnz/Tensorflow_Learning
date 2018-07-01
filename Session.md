@@ -23,6 +23,14 @@ with tf.Session():
 ```
 ### Run method
 ```
+run(
+    fetches,
+    feed_dict=None,
+    options=None,
+    run_metadata=None
+)
+```
+```
 sess = tf.InteractiveSession()
 a = tf.constant([10, 20])
 b = tf.constant([1.0, 2.0])
