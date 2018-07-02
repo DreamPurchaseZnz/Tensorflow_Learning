@@ -85,6 +85,14 @@ tf.svd(tensor, full_matrices=False, compute_uv=True, name=None)
 Multiplies matrix a by matrix b, producing a * b.
 
 The inputs must, following any transpositions, be tensors of rank >= 2 where the inner 2 dimensions specify valid matrix multiplication arguments, and any further outer dimensions match.
+### tf.add_n
+```
+tf.add_n(
+    inputs,
+    name=None
+)
+Adds all input tensors element-wise.
+```
 
 
 ## Complex Number Functions
