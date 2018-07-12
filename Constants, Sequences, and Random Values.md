@@ -68,10 +68,12 @@ array([[ 1.04485011, -3.27299333, -1.52553272],
 c = tf.constant([[1, 2], [3, 4], [5, 6]])
 shuff = tf.random_shuffle(c)
 sess.run(shuff)
+
 Out[138]: 
 array([[1, 2],
        [5, 6],
        [3, 4]])
+       
 sess.run(c)
 Out[141]: 
 array([[1, 2],
@@ -79,16 +81,14 @@ array([[1, 2],
        [5, 6]])
        
 print(sess.run(norm))
-print(sess.run(norm))
 [[-0.01499939  0.16252124  2.79371309]
  [-1.38953209  8.84682083 -3.50333261]]
 [[-1.14327836 -1.55230355 -1.63681424]
  [-1.5096972   7.47023201 -1.91704535]]
+ 
 norm = tf.random_normal([2, 3], seed=1234)
 sess = tf.Session()
 print(sess.run(norm))
-print(sess.run(norm))
-2018-01-13 16:37:21.795303: I c:\tf_jenkins\home\workspace\release-win\device\gpu\os\windows\tensorflow\core\common_runtime\gpu\gpu_device.cc:977] Creating TensorFlow device (/gpu:0) -> (device: 0, name: GeForce GTX 1080, pci bus id: 0000:06:00.0)
 [[ 0.51340485 -0.25581399  0.65199131]
  [ 1.39236379  0.37256798  0.20336303]]
 [[ 0.96462417  0.34291974  0.24251089]
@@ -97,9 +97,6 @@ print(sess.run(norm))
  
 var = tf.Variable(tf.random_uniform([2, 3]), name="var")
 sess.run(var)
-tensorflow.python.framework.errors_impl.FailedPreconditionError: Attempting to use uninitialized value var
-	 [[Node: var/_2 = _Send[T=DT_FLOAT, client_terminated=false, recv_device="/job:localhost/replica:0/task:0/cpu:0", send_device="/job:localhost/replica:0/task:0/gpu:0", send_device_incarnation=1, tensor_name="edge_1_var", _device="/job:localhost/replica:0/task:0/gpu:0"](var)]]
-	 [[Node: var/_3 = _Recv[_start_time=0, client_terminated=false, recv_device="/job:localhost/replica:0/task:0/cpu:0", send_device="/job:localhost/replica:0/task:0/gpu:0", send_device_incarnation=1, tensor_name="edge_1_var", tensor_type=DT_FLOAT, _device="/job:localhost/replica:0/task:0/cpu:0"]()]]
 init = tf.global_variables_initializer()
 sess.run(init)
 sess.run(var)
