@@ -35,6 +35,24 @@ tf.random_crop                        ---> crop for image input
 tf.multinomial
 tf.random_gamma
 ```
+The next following example try to explain that when you need two random variables, just one defined is not enough.
+All through every fetch, the variables values is different, howver in one time, the variables values is same at all
+![pic](Pic/random_variables.png)
+```
+import tensorflow as  tf
+
+a = tf.random_normal([], 0, 1)
+b = a + 1
+c = a + 2
+sess = tf.InteractiveSession()
+sess.run([b, c])                       # [1.145123, 2.145123]
+
+b = tf.random_normal([], 0, 1)
+a = b + 1
+b = tf.random_normal([], 0, 1)
+c = b + 1
+sess.run([b, c])                       # [0.2580133, 1.2580132]
+```
 
 ### Examples
 ```
