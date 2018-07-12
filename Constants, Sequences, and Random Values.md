@@ -37,7 +37,9 @@ tf.random_gamma
 ```
 The next following example try to explain that when you need two random variables, just one defined is not enough.
 All through every fetch, the variables values is different, howver in one time, the variables values is same at all
-![pic](Pic/random_variables.png)
+
+![pic](Pic/random_variable.png)
+
 ```
 import tensorflow as  tf
 
