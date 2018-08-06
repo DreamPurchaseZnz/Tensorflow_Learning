@@ -88,3 +88,7 @@ for i in range(y_dim):
 f= tf.concat(g,axis = 0)
 
 ```
+
+## tf.random_normal_initializer
+
+
