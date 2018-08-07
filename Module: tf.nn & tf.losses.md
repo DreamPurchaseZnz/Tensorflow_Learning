@@ -119,14 +119,17 @@ def deconv2d(_input, kernel_size=3, out_shape=None,
 ```
 The graph can be established, however, when you use optimizer to optimize the function that consists of the *deconv2d*, it will 
 raise excertion that 
+
 ```
 During handling of the above exception, another exception occurred:
 
-'gradients/decoder/decoder_section/block_7/up_block/conv2d_transpose_grad/Conv2D' (op: 'Conv2D') with input shapes: [64,1,15,64], [1,3,128,128].
+'gradients/decoder/decoder_section/block_7/up_block/conv2d_transpose_grad/Conv2D'
+(op: 'Conv2D') with input shapes: [64,1,15,64], [1,3,128,128].
 
 During handling of the above exception, another exception occurred:
 
-ValueError: Dimensions must be equal, but are 64 and 128 for 'gradients/decoder/decoder_section/block_7/up_block/conv2d_transpose_grad/Conv2D' (op: 'Conv2D') with input shapes: [64,1,15,64], [1,3,128,128].
+ValueError: Dimensions must be equal, but are 64 and 128 for 'gradients/decoder/decoder_section/block_7/up_block/conv2d_transpose_grad/Conv2D'
+(op: 'Conv2D') with input shapes: [64,1,15,64], [1,3,128,128].
 ```
 So you cannot tell why it was wrong at first glance.
 
@@ -148,6 +151,10 @@ softplus                                 ---> Computes softplus: log(exp(feature
 softsign                                 ---> Computes softsign: features / (abs(features) + 1).
 dropout                                  ---> Computes dropout
 ```
+
+# ---------------------------------------------------------------------------------------------------
+# RNN-recurrent neural networks
+# ---------------------------------------------------------------------------------------------------
 
 ## RNN AND EMBEDDING AND SAMPLER 
 ```
@@ -177,7 +184,22 @@ learned_unigram_candidate_sampler
 log_uniform_candidate_sampler
 lrn
 ```
-## Loss function
+
+
+
+
+
+
+
+
+
+
+
+
+# ---------------------------------------------------------------------------------------------------
+# Loss function
+# ---------------------------------------------------------------------------------------------------
+
 ```
 sigmoid_cross_entropy_with_logits        ---> Computes sigmoid cross entropy given logits.
 softmax_cross_entropy_with_logits        ---> Computes softmax cross entropy between logits and labels.
@@ -189,7 +211,7 @@ log_poisson_loss
 nce_loss
 sampled_softmax_loss
 ```
-### Mathematic formula Vs the tf.nn.softmax
+## Mathematic formula Vs the tf.nn.softmax
 
 [The math principle of softmax is in the wiki](https://zh.wikipedia.org/zh-cn/Softmax%E5%87%BD%E6%95%B0) 
 the following code is implementation: 
@@ -228,7 +250,7 @@ print(sess.run(tf.nn.softmax(a)))
 print(sess.run(tf.nn.softmax(a)))
 [ 0.0320586   0.08714432  0.23688284  0.64391428]
 ```
-### tf.nn.softmax_cross_entopy Vs the method based on tf.nn.softmax 
+## tf.nn.softmax_cross_entopy Vs the method based on tf.nn.softmax 
 
 ```
 import tensorflow as tf
@@ -260,6 +282,7 @@ Out[35]:
 0.83934333897877944
 
 ```
+
 [**softmax_cross_entropy**](https://stackoverflow.com/questions/34240703/difference-between-tensorflow-tf-nn-softmax-and-tf-nn-softmax-cross-entropy-with)
 just can be interpreted as follows:
 ```
@@ -280,7 +303,7 @@ Out[39]:
 ```
 
 
-### sigmoid
+## sigmoid
 tf.nn.sigmoid_cross_entropy_with_logits
 ```
 sigmoid_cross_entropy_with_logits(
