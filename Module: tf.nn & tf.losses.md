@@ -1,13 +1,11 @@
 # Module:tf.nn
 Neural network support
 
-# Functions
-
-## Pooling ,CNN and Normalization 
-SUMMARY 
 ```
 all_candidate_sampler
-atrous_conv2d                            ---> Atrous convolution(a.k.a. convolution with holes or dilated convolution)
+atrous_conv2d                            ---> Atrous convolution
+                                             (a.k.a. convolution with holes or
+                                             dilated convolution)
 atrous_conv2d_transpose
 avg_pool                                 ---> Performs the average pooling on the input
 avg_pool3d
@@ -15,16 +13,21 @@ fractional_avg_pool                      ---> Performs fractional average poolin
 fractional_max_pool                      ---> Performs fractional max pooling on the input.
 fused_batch_norm                         --->  Batch normalization.
 batch_normalization                      ---> Batch normalization.
-conv1d                                   ---> Computes a 1-D convolution given 3-D input and filter tensors.
-conv2d                                   ---> Computes a 2-D convolution given 4-D input and filter tensors.
+conv1d                                   ---> Computes a 1-D convolution given 3-D 
+                                              input and filter tensors.
+conv2d                                   ---> Computes a 2-D convolution given 4-D 
+                                              input and filter tensors.
 conv2d_backprop_filter                   
 conv2d_backprop_input                   
 conv2d_transpose                         ---> The transpose of conv2d.
-conv3d                                   ---> Computes a 3-D convolution given 5-D input and filter tensors.
+conv3d                                   ---> Computes a 3-D convolution given 5-D 
+                                              input and filter tensors.
 conv3d_backprop_filter_v2
 conv3d_transpose
-convolution                              ---> Computes sums of N-D convolutions (actually cross-correlation).
-depthwise_conv2d                         ---> Depthwise 2-D convolution, applies a different filter to each input channel 
+convolution                              ---> Computes sums of N-D convolutions 
+                                             (actually cross-correlation).
+depthwise_conv2d                         ---> Depthwise 2-D convolution, applies a 
+                                              different filter to each input channel 
 depthwise_conv2d_native                 
 depthwise_conv2d_native_backprop_filter
 depthwise_conv2d_native_backprop_input
@@ -35,7 +38,8 @@ max_pool_with_argmax
 moments                                  ---> Calculate the mean and variance of x.
 normalize_moments
 pool                                     ---> Performs an N-D pooling operation.
-quantized_avg_pool                       ---> Produces the average pool of the input tensor for quantized types.
+quantized_avg_pool                       ---> Produces the average pool of the 
+                                              input tensor for quantized types.
 quantized_conv2d
 quantized_max_pool
 raw_rnn
@@ -50,7 +54,8 @@ conv2d(
     strides,                             ---> A list of ints
     padding,                             ---> A string from: "SAME", "VALID"
     use_cudnn_on_gpu=None,
-    data_format=None,                    ---> An optional string from:"NHWC"([batch, height, width, channels]),"NCHW" 
+    data_format=None,                    ---> An optional string from:"NHWC"
+                                              ([batch, height, width, channels]),"NCHW" 
     name=None
 )
 ```
@@ -62,7 +67,8 @@ avg_pool(
     ksize,                              ---> A list of ints that has length >=4; 
                                              the size of the window for each dimension of input tensor
     strides,                            ---> A list of ints that has length >=4;
-                                             the stride of the sliding window for each dimension of input tensor
+                                             the stride of the sliding 
+                                             window for each dimension of input tensor
     padding,                            ---> A string, either "SAME" or "VALID "
     data_format='NHWC',                 ---> A string
     name=None
@@ -78,7 +84,8 @@ is unchanged.
 ```
 dropout(
     x,                                 ---> A tensor
-    keep_prob,                         ---> A scalar Tensor, the probability that each element is kept
+    keep_prob,                         ---> A scalar Tensor, 
+                                            the probability that each element is kept
     noise_shape=None,                  
     seed=None,
     name=None
@@ -134,7 +141,9 @@ ValueError: Dimensions must be equal, but are 64 and 128 for 'gradients/decoder/
 So you cannot tell why it was wrong at first glance.
 
 
-## Activation function 
+# Activation function 
+---------------------------------------------------------------------------------------------------
+
 ```
 xw_plus_b                                --->  Computes matmul(x, weights) + biases.
 relu_layer                               ---> Computes Relu(x * weight + biases).
@@ -152,53 +161,9 @@ softsign                                 ---> Computes softsign: features / (abs
 dropout                                  ---> Computes dropout
 ```
 
-# ---------------------------------------------------------------------------------------------------
-# RNN-recurrent neural networks
-# ---------------------------------------------------------------------------------------------------
 
-## RNN AND EMBEDDING AND SAMPLER 
-```
-static_bidirectional_rnn
-static_rnn
-static_state_saving_rnn
-sufficient_statistics
-top_k
-uniform_candidate_sampler
-weighted_moments                         ---> Returns the frequency-weighted mean and variance of x.
-with_space_to_batch
-zero_fraction
-ctc_beam_search_decoder
-ctc_greedy_decoder
-ctc_loss
-bias_add
-bidirectional_dynamic_rnn                
-compute_accidental_hits
-dilation2d
-dynamic_rnn
-embedding_lookup
-embedding_lookup_sparse
-erosion2d
-fixed_unigram_candidate_sampler
-in_top_k
-learned_unigram_candidate_sampler
-log_uniform_candidate_sampler
-lrn
-```
-
-
-
-
-
-
-
-
-
-
-
-
-# ---------------------------------------------------------------------------------------------------
 # Loss function
-# ---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
 
 ```
 sigmoid_cross_entropy_with_logits        ---> Computes sigmoid cross entropy given logits.
