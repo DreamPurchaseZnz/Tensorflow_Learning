@@ -4,29 +4,14 @@ tf.data.Dataset                      # for input pipelines
 ```
 ## Classes
 ```
-class Dataset
+class Dataset                     # Represents a potentially large set of elements.
+class FixedLengthRecordDataset    # A Dataset of fixed-length records from one or more binary files.
+class Iterator                    # Represents the state of iterating through a Dataset.
+class Options                     # Represents options for tf.data.Dataset.
+class TFRecordDataset             # A Dataset comprising records from one or more TFRecord files.
+class TextLineDataset             # A Dataset comprising lines from one or more text files.
 ```
-1. Represents a potentially large set of elements.
-```
-class FixedLengthRecordDataset
-```
-2. A Dataset of fixed-length records from one or more binary files.
-```
-class Iterator
-```
-3. Represents the state of iterating through a Dataset.
-```
-class Options
-```
-4. Represents options for tf.data.Dataset.
-```
-class TFRecordDataset
-```
-A Dataset comprising records from one or more TFRecord files.
-```
-class TextLineDataset
-```
-5. A Dataset comprising lines from one or more text files.
+
 ## tf.data.dataset
 represents a potentially large set of elements
 
@@ -144,8 +129,19 @@ tf.data.Dataset.range(7).window(3, 1, 2, True) produces { {0, 2, 4}, {1, 3, 5}, 
 zip(datasets)                  # Creates a Dataset by zipping together the given datasets.
 ```
        
-       
-       
+## tf.data.TFRecordDataset
+```
+tf.data.Dataset                     # numpy,etc.
+tf.data.TFRecordDataset             # comprising records from one or more TFRecord files
+__init__(
+    filenames,
+    compression_type=None,
+    buffer_size=None,
+    num_parallel_reads=None)
+```
+Properties and methods are similar to the tf.data.Dataset.
+
+
        
        
        
