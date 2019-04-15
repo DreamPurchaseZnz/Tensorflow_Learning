@@ -3,8 +3,8 @@
 
 # Table of contents
 1. [Preamble](#preamble)
-2. [Placeholders](##Placeholders)
-3. [protobuf and binary formats](##protobuf and binary formats)
+2. [Placeholders](# Placeholders)
+3. [protobuf and binary formats](# protobuf and binary formats)
 
 
 ## tf.contrib.data and tf.data
