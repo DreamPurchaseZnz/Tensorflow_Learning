@@ -129,10 +129,25 @@ take(count)                            # Creates a Dataset with at most count el
 
 window(                                # Combines input elements into a dataset of windows.
     size,
-    shift=None,
-    stride=1,
-    drop_remainder=False
-)
-
+    shift=None,                        # The shift argument determines the shift of the window
+    stride=1,                          # The stride of the input elements
+    drop_remainder=False)             
 ```
-
+where window
+```
+tf.data.Dataset.range(7).window(2) produces { {0, 1}, {2, 3}, {4, 5}, {6}} 
+tf.data.Dataset.range(7).window(3, 2, 1, True) produces { {0, 1, 2}, {2, 3, 4}, {4, 5, 6}} - 
+tf.data.Dataset.range(7).window(3, 1, 2, True) produces { {0, 2, 4}, {1, 3, 5}, {2, 4, 6}}
+```
+```
+@staticmethod
+zip(datasets)                  # Creates a Dataset by zipping together the given datasets.
+```
+       
+       
+       
+       
+       
+       
+       
+       
