@@ -2,7 +2,7 @@
 ```
 tf.data.Dataset                      # for input pipelines
 ```
-Classes:
+## Classes
 ```
 class Dataset
 ```
@@ -27,4 +27,3 @@ A Dataset comprising records from one or more TFRecord files.
 class TextLineDataset
 ```
 5. A Dataset comprising lines from one or more text files.
-
