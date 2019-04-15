@@ -365,7 +365,7 @@ A tf.data.Iterator provides the main way to extract elements from a dataset.
        
 The simplest iterator is a "one-shot iterator", which is associated with a particular Dataset and iterates through it once       
        
-
+## [TensorFlow Dataset API tutorial – build high performance data pipelines](https://adventuresinmachinelearning.com/tensorflow-dataset-tutorial/)
 
 
 
