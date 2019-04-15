@@ -31,34 +31,43 @@ output_types
 ### Methods
 ```
 apply(transformation_func)            # Applies a transformation function to this dataset.
-
+```
+```
 batch(
     batch_size,
     drop_remainder=False)             # Combines consecutive elements of this dataset into batches.
-
+```
+```
 cache(filename='')                    # Caches the elements in this dataset
 concatenate(dataset)                  # Creates a Dataset by concatenating given dataset with this dataset
-
+```
+```
 from_tensor_slices(tensors)           # Creates a Dataset whose elements are slices of the given tensors
 from_tensors(tensors)                 # Creates a Dataset with a single element, comprising the given tensors
-
+```
+```
 interleave(                           # Maps map_func across this dataset, and interleaves the results
     map_func,
     cycle_length,                     # controls the number of input elements that are processed concurrently.
     block_length=1,                   # The number of consecutive elements to produce from each input element 
                                         before cycling to another input element.
     num_parallel_calls=None)          
-
+```
+```
 @staticmethod
 list_files(                           # A dataset of all files matching one or more glob patterns.
     file_pattern,
     shuffle=None,
     seed=None
 )
+```
+```
 make_initializable_iterator(shared_name=None)    # Creates an Iterator for enumerating 
                                                    The elements of this dataset.
 make_one_shot_iterator()                         # A "one-shot" iterator does not currently 
                                                    support re-initialization.
+```
+```
 map(                                             # Maps map_func across the elements of this dataset.
     map_func,
     num_parallel_calls=None
@@ -92,26 +101,33 @@ padded_shapes = tf.Dimension(37)       # the component will be padded out to tha
 ```
 ```
 prefetch(buffer_size)                  # Creates a Dataset that prefetches elements from this dataset
-
+```
+```
 @staticmethod
 range(*args)                           # Creates a Dataset of a step-separated range of values.
 
+```
+```
 reduce(                                # Reduces the input dataset to a single element.
     initial_state,
     reduce_func
 )
-
+```
+```
 repeat(count=None)                     # Repeats this dataset count times.
-
+```
+```
 shuffle(                               # Randomly shuffles the elements of this dataset.
     buffer_size,
     seed=None,
     reshuffle_each_iteration=None
 )
-
+```
+```
 skip(count)                            # Creates a Dataset that skips count elements from this dataset.
 take(count)                            # Creates a Dataset with at most count elements from this dataset.
-
+```
+```
 window(                                # Combines input elements into a dataset of windows.
     size,
     shift=None,                        # The shift argument determines the shift of the window
