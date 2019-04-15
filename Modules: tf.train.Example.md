@@ -112,6 +112,7 @@ Most code can be ported by removing .contrib from the names of the classes.
 ```
 tf.data                  # provides tools for reading and writing data in tensorflow
 ```
+#### tf.data.TFRecordDataset and tf.data.experimental.TFRecordWriter
 Writing a TFRecord file and then Reading a TFRecord file
 ```
 filename = 'test.tfrecord'
@@ -122,8 +123,46 @@ writer.write(serialized_features_dataset)
 filenames = [filename]
 raw_dataset = tf.data.TFRecordDataset(filenames)
 raw_dataset
-```
+for raw_record in raw_dataset.take(10):
+  print(repr(raw_record))
+  
+# Create a description of the features.  
+feature_description = {
+    'feature0': tf.FixedLenFeature([], tf.int64, default_value=0),
+    'feature1': tf.FixedLenFeature([], tf.int64, default_value=0),
+    'feature2': tf.FixedLenFeature([], tf.string, default_value=''),
+    'feature3': tf.FixedLenFeature([], tf.float32, default_value=0.0),
+}
 
+def _parse_function(example_proto):
+  # Parse the input tf.Example proto using the dictionary above.
+  return tf.parse_single_example(example_proto, feature_description)
+
+parsed_dataset = raw_dataset.map(_parse_function)
+parsed_dataset 
+for parsed_record in parsed_dataset.take(10):
+  print(repr(parsed_record))
+```
+### TFRecord files using tf.python_io
+```
+# Write the `tf.Example` observations to the file.
+with tf.python_io.TFRecordWriter(filename) as writer:
+  for i in range(n_observations):
+    example = serialize_example(feature0[i], feature1[i], feature2[i], feature3[i])
+    writer.write(example)
+```
+```
+record_iterator = tf.python_io.tf_record_iterator(path=filename)
+
+for string_record in record_iterator:
+  example = tf.train.Example()
+  example.ParseFromString(string_record)
+  
+  print(example)
+  
+  # Exit after 1 iteration as this is purely demonstrative.
+  break
+```
 
 ## To conclude
 ```
