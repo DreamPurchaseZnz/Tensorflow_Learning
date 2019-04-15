@@ -1,17 +1,10 @@
-# TensorFlow Data Input : Placeholders, Protobufs & Queues
+# TF EXAMPLE
 [Using TFRecords and tf.Example](https://www.tensorflow.org/tutorials/load_data/tf_records)
 
 # Table of contents
 1. [Preamble](#preamble)
 2. [Placeholders](#Placeholders)
 
-
-## tf.contrib.data and tf.data
-[Porting your code to tf.data](https://github.com/tensorflow/tensorflow/blob/r1.4/tensorflow/contrib/data/README.md)
-
-The tf.contrib.data.Dataset class has been renamed to tf.data.Dataset,
-and the tf.contrib.data.Iterator class has been renamed to tf.data.Iterator.
-Most code can be ported by removing .contrib from the names of the classes.
 
 ## Preamble
 
@@ -108,6 +101,14 @@ tf.train.Example.FromString(serialized_example)       # from string to protomess
 protomessage.SerializeToString                        # All the proto messages can be serialized to binary-string 
 ```
 ## TFRecord files using tf.data
+###  tf.contrib.data and tf.data
+[Porting your code to tf.data](https://github.com/tensorflow/tensorflow/blob/r1.4/tensorflow/contrib/data/README.md)
+
+The tf.contrib.data.Dataset class has been renamed to tf.data.Dataset,
+and the tf.contrib.data.Iterator class has been renamed to tf.data.Iterator.
+Most code can be ported by removing .contrib from the names of the classes.
+
+### tf.data
 ```
 tf.data                  # provides tools for reading and writing data in tensorflow
 ```
