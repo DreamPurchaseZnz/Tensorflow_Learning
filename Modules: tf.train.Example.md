@@ -112,6 +112,17 @@ Most code can be ported by removing .contrib from the names of the classes.
 ```
 tf.data                  # provides tools for reading and writing data in tensorflow
 ```
+Writing a TFRecord file and then Reading a TFRecord file
+```
+filename = 'test.tfrecord'
+writer = tf.data.experimental.TFRecordWriter(filename)
+writer.write(serialized_features_dataset)
+```
+```
+filenames = [filename]
+raw_dataset = tf.data.TFRecordDataset(filenames)
+raw_dataset
+```
 
 
 ## To conclude
