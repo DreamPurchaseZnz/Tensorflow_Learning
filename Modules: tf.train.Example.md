@@ -1,13 +1,6 @@
 # TF EXAMPLE
 [Using TFRecords and tf.Example](https://www.tensorflow.org/tutorials/load_data/tf_records)
 
-# Table of contents
-1. [Preamble](#preamble)
-2. [Placeholders](#Placeholders)
-
-
-## Preamble
-
 The processes of getting data into a model can be rather annoying, with a lot of glue code. 
 
 TensorFlow tries to fix this by providing a few ways to feed in data. 
@@ -23,10 +16,6 @@ binary files and input queues
 ```
 Not only does this lighten the amount of code I need to write, removing the need to do any data augmentation or file reading, but the interface is reasonably standard across different kinds of data. It is also conceptually cleaner. 
 
-## Placeholders
-
-You need to have consistent image loading and a scaling pipeline that is consitent at train and test time.
-You need to ensure that the input is fast enough.
 
 ## protobuf and binary formats
 
@@ -112,6 +101,8 @@ Most code can be ported by removing .contrib from the names of the classes.
 ```
 tf.data                  # provides tools for reading and writing data in tensorflow
 ```
+
+
 #### tf.data.TFRecordDataset and tf.data.experimental.TFRecordWriter
 Writing a TFRecord file and then Reading a TFRecord file
 ```
