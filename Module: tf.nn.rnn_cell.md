@@ -3,6 +3,7 @@
 
 ## RNN AND EMBEDDING AND SAMPLER 
 ```
+tf.nn.methods:
 static_bidirectional_rnn
 static_rnn
 static_state_saving_rnn
@@ -19,9 +20,7 @@ bias_add
 bidirectional_dynamic_rnn                
 compute_accidental_hits
 dilation2d
-
 dynamic_rnn
-
 embedding_lookup
 embedding_lookup_sparse
 erosion2d
