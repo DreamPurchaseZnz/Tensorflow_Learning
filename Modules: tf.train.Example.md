@@ -17,7 +17,7 @@ binary files and input queues
 Not only does this lighten the amount of code I need to write, removing the need to do any data augmentation or file reading, but the interface is reasonably standard across different kinds of data. It is also conceptually cleaner. 
 
 
-## protobuf and binary formats
+## TF.train.Features
 
 These files will always be read off of disk in a standardized way and never all at once
 
