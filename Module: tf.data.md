@@ -704,7 +704,8 @@ with tf.Session() as sess:
     for i in range(valid_iters):
         acc = sess.run([accuracy])
         avg_acc += acc[0]
-    print("Average validation set accuracy over {} iterations is {:.2f}%".format(valid_iters,                                                                              (avg_acc / valid_iters) * 100))
+    print("Average validation set accuracy over {} iterations is {:.2f}%".format(valid_iters,                           
+    (avg_acc / valid_iters) * 100))
 ```
 As can be observed, before the main training loop is entered into, the session executes the training_init_op operation, which initializes the generic iterator to extract data from train_dataset. After running epochs iterations to train the model, we then want to check how the trained model performs on the validation dataset (valid_dataset). To do this, we can simply run the validation_init_op operation in the session to point the generic iterator to valid_dataset. Then we run the accuracy operation as per normal, knowing that the operation will be calculating the model accuracy based on the validation data, rather than the training data. 
 
