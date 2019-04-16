@@ -1,22 +1,6 @@
 # TF EXAMPLE
 [Using TFRecords and tf.Example](https://www.tensorflow.org/tutorials/load_data/tf_records)
 
-The processes of getting data into a model can be rather annoying, with a lot of glue code. 
-
-TensorFlow tries to fix this by providing a few ways to feed in data. 
-The easiest of these is to use 
-```
-placeholders
-```
-which allow you to manually pass in numpy arrays of data.
-
-The second method, my preferred, is to do as much as I possibly can on the graph and to make use of 
-```
-binary files and input queues
-```
-Not only does this lighten the amount of code I need to write, removing the need to do any data augmentation or file reading, but the interface is reasonably standard across different kinds of data. It is also conceptually cleaner. 
-
-
 ## TF.train.Features
 
 These files will always be read off of disk in a standardized way and never all at once
@@ -90,19 +74,6 @@ tf.train.Example.FromString(serialized_example)       # from string to protomess
 protomessage.SerializeToString                        # All the proto messages can 
                                                         be serialized to binary-string 
 ```
-## TFRecord files using tf.data
-###  tf.contrib.data and tf.data
-[Porting your code to tf.data](https://github.com/tensorflow/tensorflow/blob/r1.4/tensorflow/contrib/data/README.md)
-
-The tf.contrib.data.Dataset class has been renamed to tf.data.Dataset,
-and the tf.contrib.data.Iterator class has been renamed to tf.data.Iterator.
-Most code can be ported by removing .contrib from the names of the classes.
-
-### tf.data
-```
-tf.data                  # provides tools for reading and writing data in tensorflow
-```
-
 
 #### tf.data.TFRecordDataset and tf.data.experimental.TFRecordWriter
 Writing a TFRecord file and then Reading a TFRecord file
@@ -156,14 +127,6 @@ for string_record in record_iterator:
   break
 ```
 
-## To conclude
-```
-1. Define a record reader function of some kind. This parses the record.
-2. Construct a batcher of some kind.
-3. Build the rest of your model from these ops.
-4. Initialize all the ops.
-5. Start queue runners.
-6. Run your train loop.
-```
+
 
 
