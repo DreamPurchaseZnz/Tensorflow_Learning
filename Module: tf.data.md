@@ -710,6 +710,47 @@ with tf.Session() as sess:
 As can be observed, before the main training loop is entered into, the session executes the training_init_op operation, which initializes the generic iterator to extract data from train_dataset. After running epochs iterations to train the model, we then want to check how the trained model performs on the validation dataset (valid_dataset). To do this, we can simply run the validation_init_op operation in the session to point the generic iterator to valid_dataset. Then we run the accuracy operation as per normal, knowing that the operation will be calculating the model accuracy based on the validation data, rather than the training data. 
 
 
+## [Data Input Pipeline Performance](https://www.tensorflow.org/guide/performance/datasets)
+### Optimizing Performance
+As new computing devices (such as GPUs and TPUs) make it possible to train neural networks at an increasingly fast rate, the CPU processing is prone to becoming the bottleneck. The tf.data API provides users with building blocks to design input pipelines that effectively utilize the CPU, optimizing each step of the ETL process.
+
+Pipelining
+To perform a training step, you must first extract and transform the training data and then feed it to a model running on an accelerator. However, in a naive synchronous implementation, while the CPU is preparing the data, the accelerator is sitting idle. Conversely, while the accelerator is training the model, the CPU is sitting idle. The training step time is thus the sum of both CPU pre-processing time and the accelerator training time.
+
+Pipelining overlaps the preprocessing and model execution of a training step. While the accelerator is performing training step N, the CPU is preparing the data for step N+1. Doing so reduces the step time to the maximum (as opposed to the sum) of the training and the time it takes to extract and transform the data.
+
+Without pipelining, the CPU and the GPU/TPU sit idle much of the time
+
+The tf.data API provides a software pipelining mechanism through the tf.data.Dataset.prefetch transformation, which can be used to decouple the time data is produced from the time it is consumed. In particular, the transformation uses a background thread and an internal buffer to prefetch elements from the input dataset ahead of the time they are requested. Thus, to achieve the pipelining effect illustrated above, you can add prefetch(1) as the final transformation to your dataset pipeline (or prefetch(n) if a single training step consumes n elements).
+
+To apply this change to our running example, change:
+```
+dataset = dataset.batch(batch_size=FLAGS.batch_size)
+return dataset
+```
+to
+```
+dataset = dataset.batch(batch_size=FLAGS.batch_size)
+dataset = dataset.prefetch(buffer_size=FLAGS.prefetch_buffer_size)
+return dataset
+```
+Note that the prefetch transformation will yield benefits any time there is an opportunity to overlap the work of a "producer" with the work of a "consumer." The preceding recommendation is simply the most common application.
+
+### Parallelize Data Transformation
+
+When preparing a batch, input elements may need to be pre-processed. To this end, the tf.data API offers the tf.data.Dataset.map transformation, which applies a user-defined function (for example, parse_fn from the running example) to each element of the input dataset. Because input elements are independent of one another, the pre-processing can be parallelized across multiple CPU cores. To make this possible, the map transformation provides the num_parallel_calls argument to specify the level of parallelism. For example, the following diagram illustrates the effect of setting num_parallel_calls=2 to the map transformation:
+
+Choosing the best value for the num_parallel_calls argument depends on your hardware, characteristics of your training data (such as its size and shape), the cost of your map function, and what other processing is happening on the CPU at the same time; a simple heuristic is to use the number of available CPU cores. For instance, if the machine executing the example above had 4 cores, it would have been more efficient to set num_parallel_calls=4. On the other hand, setting num_parallel_calls to a value much greater than the number of available CPUs can lead to inefficient scheduling, resulting in a slowdown.
+```
+dataset = dataset.map(map_func=parse_fn)
+```
+to
+```
+dataset = dataset.map(map_func=parse_fn, num_parallel_calls=FLAGS.num_parallel_calls)
+```
+
+
+
 
 
 
