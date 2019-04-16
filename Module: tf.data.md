@@ -499,33 +499,214 @@ sess.run(iterator.initializer, feed_dict={features_placeholder: features,
 
 ## [TensorFlow Dataset API tutorial – build high performance data pipelines](https://adventuresinmachinelearning.com/tensorflow-dataset-tutorial/)
 
+The TensorFlow Dataset framework has two main components:
+```
+Dataset
+An associated Iterator
+```
+The Dataset is basically where the data resides. This data can be loaded in from a number of sources – existing tensors, numpy arrays and numpy files, the TFRecord format and direct from text files. Once you’ve loaded the data into the Dataset object, you can string together various operations to apply to the data, these include operations such as:
 
+```
+batch()              # this allows you to consume the data from your TensorFlow Dataset in batches
+map()                # this allows you to transform the data using lambda statements applied to each element
+zip()                # this allows you to zip together different Dataset objects 
+                       into a new Dataset, in a similar way to the Python zip function
+filter()             # this allows you to remove problematic data-points in your data-set,
+                       again based on some lambda function
+repeat()             # this operation restricts the number of times data is consumed 
+                       from the Dataset before a tf.errors.OutOfRangeError error is thrown
+shuffle()            # this operation shuffles the data in the Dataset
+```
 
+### Simple TensorFlow Dataset examples
+In the first simple example, we’ll create a dataset out of numpy ranges:
+```
+x = np.arange(0, 10)
+```
+We can create a TensorFlow Dataset object straight from a numpy array using from_tensor_slices():
+```
+# create dataset object from numpy array
+dx = tf.data.Dataset.from_tensor_slices(x)
+```
 
+The object dx is now a TensorFlow Dataset object. The next step is to create an Iterator that will extract data from this dataset. In the code below, the iterator is created using the method make_one_shot_iterator().  The iterator arising from this method can only be initialized and run once – it can’t be re-initialized. The importance of being able to re-initialize an iterator will be explained more later.
 
+```
+# create a one-shot iterator
+iterator = dx.make_one_shot_iterator()
+# extract an element
+next_element = iterator.get_next()
+```
+After the iterator is created, the next step is to setup a TensorFlow operation which can be called from the training code to extract the next element from the dataset. Finally, the dataset operation can be examined by running the following code:
+```
+with tf.Session() as sess:
+    for i in range(11):
+        val = sess.run(next_element)
+        print(val)
+```
+This code will print out integers from 0 to 9 but then throw an OutOfRangeError. This is because the code extracted all the data slices from the dataset and it is now out of range or “empty”.
 
+If we want to repeatedly extract data from a dataset, one way we can do it is to make the dataset re-initializable. We can do that by first adjusting the make_one_shot_iterator() line to the following:
 
+```
+iterator = dx.make_initializable_iterator()
+```
+Then, within the TensorFlow session, the code looks like this:
 
+```
+with tf.Session() as sess:
+    sess.run(iterator.initializer)
+    for i in range(15):
+        val = sess.run(next_element)
+        print(val)
+        if i % 9 == 0 and i > 0:
+            sess.run(iterator.initializer)
+```
+Note that the first operation run is the iterator.initializer operation. This is required to get your iterator ready for action and if you don’t do this before running the next_element operation it will throw an error. The final change is the last two lines: this if statement ensures that when we know that the iterator has run out of data (i.e. i == 9), the iterator is re-initialized by the iterator.initializer operation. Running this new code will produce: 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4. No error this time!
 
+There are also other things that can be done to manipulate the dataset and how it can be used. First, the batch function:
+```
+dx = tf.data.Dataset.from_tensor_slices(x).batch(3)
+```
+```
+with tf.Session() as sess:
+    sess.run(iterator.initializer)
+    for i in range(15):
+        val = sess.run(next_element)
+        print(val)
+        if (i + 1) % (10 // 3) == 0 and i > 0:
+            sess.run(iterator.initializer)
+```
 
+Will produce an output like:
+```
+[0 1 2] [3 4 5] [6 7 8] [0 1 2] [3 4 5] [6 7 8]
+and so on.
+```
+Next, we can zip together datasets. This is useful when pairing up input-output training/validation pairs of data (i.e. input images and matching labels for each image). The code below does this:
+```
+def simple_zip_example():
+    x = np.arange(0, 10)
+    y = np.arange(1, 11)
+    # create dataset objects from the arrays
+    dx = tf.data.Dataset.from_tensor_slices(x)
+    dy = tf.data.Dataset.from_tensor_slices(y)
+    # zip the two datasets together
+    dcomb = tf.data.Dataset.zip((dx, dy)).batch(3)
+    iterator = dcomb.make_initializable_iterator()
+    # extract an element
+    next_element = iterator.get_next()
+    with tf.Session() as sess:
+        sess.run(iterator.initializer)
+        for i in range(15):
+            val = sess.run(next_element)
+            print(val)
+            if (i + 1) % (10 // 3) == 0 and i > 0:
+                sess.run(iterator.initializer)
+```
+```
+dcomb = tf.data.Dataset.zip((dx, dy)).repeat().batch(3)
+```
+#### TensorFlow Dataset MNIST example
 
+First, we have to load the data from the package and split it into train and validation datasets. This can be performed with the following code:
+```
+# load the data
+digits = load_digits(return_X_y=True)
+# split into train and validation sets
+train_images = digits[0][:int(len(digits[0]) * 0.8)]
+train_labels = digits[1][:int(len(digits[0]) * 0.8)]
+valid_images = digits[0][int(len(digits[0]) * 0.8):]
+valid_labels = digits[1][int(len(digits[0]) * 0.8):]
+```
+The load_digits method will extract the data from the relevant location in the scikit-learn package, and the code above splits the first 80% of the data into the training arrays, and the remaining 20% into the validation arrays.
+```
+# create the training datasets
+dx_train = tf.data.Dataset.from_tensor_slices(train_images)
+# apply a one-hot transformation to each label for use in the neural network
+dy_train = tf.data.Dataset.from_tensor_slices(train_labels).map(lambda z: tf.one_hot(z, 10))
+# zip the x and y training data together and shuffle, batch etc.
+train_dataset = tf.data.Dataset.zip((dx_train, dy_train)).shuffle(500).repeat().batch(30)
+```
+Finally, the training x and y data is zipped together in the full train_dataset. Chained along together with this zip method is first the shuffle() dataset method. This method randomly shuffles the data, using a buffer of data specified in the argument – 500 in this case. Next, the repeat() method is used, to allow the iterator to continuously extract data from this dataset, finally the data is batched with a batch size of 30.
 
+The same steps are used to create the validation dataset:
+```
+# do the same operations for the validation set
+dx_valid = tf.data.Dataset.from_tensor_slices(valid_images)
+dy_valid = tf.data.Dataset.from_tensor_slices(valid_labels).map(lambda z: tf.one_hot(z, 10))
+valid_dataset = tf.data.Dataset.zip((dx_valid, dy_valid)).shuffle(500).repeat().batch(30)
+```
+Now, we want to be able to extract data from either the train_dataset or the valid_dataset seamlessly. This is important, as we don’t want to have to change how data flows through the neural network structure when all we want to do is just change the dataset the model is consuming. To do this, we can use another way of creating the Iterator object – the from_structure() method. This method creates a generic iterator object – all it needs is the data types of the data it will be outputting and the output data size/shape in order to be created. The code below uses this methodology:
 
+```
+# create general iterator
+iterator = tf.data.Iterator.from_structure(train_dataset.output_types,
+                                               train_dataset.output_shapes)
+next_element = iterator.get_next()
+```
+The second line of the above creates a standard get_next() iterator operation which can be called to extract data from this generic iterator structure. Next, we need some operations which can be called during training or validating to initialize this generic iterator and “point it” to the desired dataset. These are as follows:
+```
+# make datasets that we can initialize separately, but using the same structure via the common iterator
+training_init_op = iterator.make_initializer(train_dataset)
+validation_init_op = iterator.make_initializer(valid_dataset)
+```
+These operations can be run to “switch over” the iterator from one dataset to another. This “switching over” will be demonstrated in code below
 
+Next, the neural network model is created – this is standard TensorFlow usage and in this case I will be utilizing the TensorFlow layers API to create a simple fully connected or dense neural network, with dropout and a first layer of batch normalization to effectively scale the input data. If you’d like to learn some of the basics of TensorFlow, check out my Python TensorFlow tutorial. The TensorFlow model is defined as follows:
+```
+def nn_model(in_data):
+    bn = tf.layers.batch_normalization(in_data)
+    fc1 = tf.layers.dense(bn, 50)
+    fc2 = tf.layers.dense(fc1, 50)
+    fc2 = tf.layers.dropout(fc2)
+    fc3 = tf.layers.dense(fc2, 10)
+    return fc3
+```
 
+To call this model creation function, the code below can be used:
+```
+# create the neural network model
+logits = nn_model(next_element[0])
+```
+Note that the next_element operation is handled directly in the model – in other words, it doesn’t need to be called explicitly during the training loop as will be seen below. Rather, whenever any of the operations following this point in the graph are called (i.e. the loss operation, the optimization operation etc.) the TensorFlow graph structure will know to run the next_element operation and extract the data from whichever dataset has been initialized into the iterator. The next_element operation, because it is operating on the generic iterator which is defined by the shape of the train_dataset, is a tuple – the first element (\[0]) will contain the MNIST images, while the second element (\[1]) will contain the corresponding labels. Therefore, next_element\[0] will extract the image data batch and send it into the neural network model (nn_model) as the input data.
 
+Next are some standard TensorFlow operations to calculate the loss function, the optimization step and prediction accuracy (again, for more details see this tutorial or this one):
 
+```
+# add the optimizer and loss
+loss = tf.reduce_sum(tf.nn.softmax_cross_entropy_with_logits_v2(labels=next_element[1], logits=logits))
+optimizer = tf.train.AdamOptimizer().minimize(loss)
+# get accuracy
+prediction = tf.argmax(logits, 1)
+equality = tf.equal(prediction, tf.argmax(next_element[1], 1))
+accuracy = tf.reduce_mean(tf.cast(equality, tf.float32))
+init_op = tf.global_variables_initializer()
+```
 
+Now we can run the training loop:
 
-
-
-
-
-
-
-
-
-
+```
+# run the training
+epochs = 600
+with tf.Session() as sess:
+    sess.run(init_op)
+    sess.run(training_init_op)
+    for i in range(epochs):
+        l, _, acc = sess.run([loss, optimizer, accuracy])
+        if i % 50 == 0:
+            print("Epoch: {}, loss: {:.3f}, training accuracy: {:.2f}%".format(i, l, acc * 100))
+    # now setup the validation run
+    valid_iters = 100
+    # re-initialize the iterator, but this time with validation data
+    sess.run(validation_init_op)
+    avg_acc = 0
+    for i in range(valid_iters):
+        acc = sess.run([accuracy])
+        avg_acc += acc[0]
+    print("Average validation set accuracy over {} iterations is {:.2f}%".format(valid_iters,                                                                              (avg_acc / valid_iters) * 100))
+```
+As can be observed, before the main training loop is entered into, the session executes the training_init_op operation, which initializes the generic iterator to extract data from train_dataset. After running epochs iterations to train the model, we then want to check how the trained model performs on the validation dataset (valid_dataset). To do this, we can simply run the validation_init_op operation in the session to point the generic iterator to valid_dataset. Then we run the accuracy operation as per normal, knowing that the operation will be calculating the model accuracy based on the validation data, rather than the training data. 
 
 
 
