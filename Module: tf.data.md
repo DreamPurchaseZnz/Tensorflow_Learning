@@ -65,6 +65,8 @@ batch(
 cache(filename='')                    # Caches the elements in this dataset
 concatenate(dataset)                  # Creates a Dataset by concatenating given dataset with this dataset
 ```
+Note that if tensors contains a NumPy array, and eager execution is not enabled, the values will be embedded in the graph as one or more tf.constant operations. For large datasets (> 1 GB), this can waste memory and run into byte limits of graph serialization.
+If tensors contains one or more large NumPy arrays, consider the alternative described in this guide.
 ```
 from_tensor_slices(tensors)           # Creates a Dataset whose elements are slices of the given tensors
 from_tensors(tensors)                 # Creates a Dataset with a single element, comprising the given tensors
@@ -346,6 +348,8 @@ The operation returned by Iterator.get_next() yields the next element of a Datas
 get_next(name=None)          # a nested structure of tf.Tensors 
                                representing the next element
 ```
+If each element of the dataset has a nested structure, 
+the return value of Iterator.get_next() will be one or more tf.Tensor objects in the same nested structure:
 ```
 make_initializer(            #  initializes this iterator on dataset.
     dataset,
@@ -356,7 +360,26 @@ make_initializer(            #  initializes this iterator on dataset.
 string_handle(name=None)     # Returns a string-valued tf.Tensor that represents this iterator.
 ```
 
+```
+dataset = tf.data.Dataset.range(5)
+iterator = dataset.make_initializable_iterator()
+next_element = iterator.get_next()
 
+# Typically `result` will be the output of a model, or an optimizer's
+# training operation.
+result = tf.add(next_element, next_element)
+
+sess.run(iterator.initializer)
+print(sess.run(result))  # ==> "0"
+print(sess.run(result))  # ==> "2"
+print(sess.run(result))  # ==> "4"
+print(sess.run(result))  # ==> "6"
+print(sess.run(result))  # ==> "8"
+try:
+  sess.run(result)
+except tf.errors.OutOfRangeError:
+  print("End of dataset")  # ==> "End of dataset"
+```
 
 
 
@@ -364,7 +387,67 @@ string_handle(name=None)     # Returns a string-valued tf.Tensor that represents
 A tf.data.Iterator provides the main way to extract elements from a dataset.
        
 The simplest iterator is a "one-shot iterator", which is associated with a particular Dataset and iterates through it once       
-       
+
+### Saving iterator state
+
+The tf.contrib.data.make_saveable_from_iterator function creates a SaveableObject from an iterator, which can be used to save and restore the current state of the iterator (and, effectively, the whole input pipeline). A saveable object thus created can be added to tf.train.Saver variables list or the tf.GraphKeys.SAVEABLE_OBJECTS collection for saving and restoring in the same manner as a tf.Variable. Refer to Saving and Restoring for details on how to save and restore variables.
+```
+# Create saveable object from iterator.
+saveable = tf.contrib.data.make_saveable_from_iterator(iterator)
+
+# Save the iterator state by adding it to the saveable objects collection.
+tf.add_to_collection(tf.GraphKeys.SAVEABLE_OBJECTS, saveable)
+saver = tf.train.Saver()
+
+with tf.Session() as sess:
+
+  if should_checkpoint:
+    saver.save(path_to_checkpoint)
+
+# Restore the iterator state.
+with tf.Session() as sess:
+  saver.restore(sess, path_to_checkpoint)
+```
+### Reading input data
+#### Consuming NumPy arrays
+If all of your input data fit in memory, the simplest way to create a Dataset from them is to convert them to tf.Tensor objects and use Dataset.from_tensor_slices()
+```
+# Load the training data into two NumPy arrays, for example using `np.load()`.
+with np.load("/var/data/training_data.npy") as data:
+  features = data["features"]
+  labels = data["labels"]
+
+# Assume that each row of `features` corresponds to the same row as `labels`.
+assert features.shape[0] == labels.shape[0]
+
+dataset = tf.data.Dataset.from_tensor_slices((features, labels))
+```
+Note that the above code snippet will embed the features and labels arrays in your TensorFlow graph as tf.constant() operations. This works well for a small dataset, but wastes memory---because the contents of the array will be copied multiple times---and can run into the 2GB limit for the tf.GraphDef protocol buffer.
+
+As an alternative, you can define the Dataset in terms of tf.placeholder() tensors, and feed the NumPy arrays when you initialize an Iterator over the dataset.
+```
+# Load the training data into two NumPy arrays, for example using `np.load()`.
+with np.load("/var/data/training_data.npy") as data:
+  features = data["features"]
+  labels = data["labels"]
+
+# Assume that each row of `features` corresponds to the same row as `labels`.
+assert features.shape[0] == labels.shape[0]
+
+features_placeholder = tf.placeholder(features.dtype, features.shape)
+labels_placeholder = tf.placeholder(labels.dtype, labels.shape)
+
+dataset = tf.data.Dataset.from_tensor_slices((features_placeholder, labels_placeholder))
+# [Other transformations on `dataset`...]
+dataset = ...
+iterator = dataset.make_initializable_iterator()
+
+sess.run(iterator.initializer, feed_dict={features_placeholder: features,
+                                          labels_placeholder: labels})
+```
+
+
+
 ## [TensorFlow Dataset API tutorial – build high performance data pipelines](https://adventuresinmachinelearning.com/tensorflow-dataset-tutorial/)
 
 
