@@ -1,4 +1,4 @@
-# TF EXAMPLE
+# TF features and example and TFRecords
 [Using TFRecords and tf.Example](https://www.tensorflow.org/tutorials/load_data/tf_records)
 
 ## TF.train.Features
@@ -75,7 +75,18 @@ protomessage.SerializeToString                        # All the proto messages c
                                                         be serialized to binary-string 
 ```
 
-#### tf.data.TFRecordDataset and tf.data.experimental.TFRecordWriter
+## tf.train.data.group_by_window
+```
+tf.contrib.data.group_by_window(
+    key_func,
+    reduce_func,
+    window_size=None,
+    window_size_func=None
+)
+```
+
+
+## tf.data.TFRecordDataset and tf.data.experimental.TFRecordWriter
 Writing a TFRecord file and then Reading a TFRecord file
 ```
 filename = 'test.tfrecord'
