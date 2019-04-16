@@ -87,7 +87,8 @@ def serialize_example(feature0, feature1, feature2, feature3):
 To decode the message use the 
 ```
 tf.train.Example.FromString(serialized_example)       # from string to protomessages
-protomessage.SerializeToString                        # All the proto messages can be serialized to binary-string 
+protomessage.SerializeToString                        # All the proto messages can 
+                                                        be serialized to binary-string 
 ```
 ## TFRecord files using tf.data
 ###  tf.contrib.data and tf.data
