@@ -121,6 +121,25 @@ padded_batch(                           # Combines consecutive elements of this 
 )
 ```
 where padded_batch is designed for the case in which the input elements to be batched may have different shapes, and this transformation will pad each component to the respective shape in padding_shapes, and the padded shapes
+
+The above recipe works for tensors that all have the same size. However, many models (e.g. sequence models) work with input data that can have varying size (e.g. sequences of different lengths). To handle this case, the Dataset.padded_batch() transformation enables you to batch tensors of different shape by specifying one or more dimensions in which they may be padded.
+```
+dataset = tf.data.Dataset.range(100)
+dataset = dataset.map(lambda x: tf.fill([tf.cast(x, tf.int32)], x))
+dataset = dataset.padded_batch(4, padded_shapes=(None,))
+
+iterator = dataset.make_one_shot_iterator()
+next_element = iterator.get_next()
+
+print(sess.run(next_element))  # ==> [[0, 0, 0], [1, 0, 0], [2, 2, 0], [3, 3, 3]]
+print(sess.run(next_element))  # ==> [[4, 4, 4, 4, 0, 0, 0],
+                               #      [5, 5, 5, 5, 5, 0, 0],
+                               #      [6, 6, 6, 6, 6, 6, 0],
+                               #      [7, 7, 7, 7, 7, 7, 7]]
+```
+The Dataset.padded_batch() transformation allows you to set different padding for each dimension of each component, and it may be variable-length (signified by None in the example above) or constant-length. It is also possible to override the padding value, which defaults to 0.
+
+
 ```
 padded_shapes = tf.Dimension(37)       # the component will be padded out to that length in that dimension    
               = tf.Dimension(None)     # the component will be padded out to the maximum length of
@@ -143,6 +162,36 @@ reduce(                                # Reduces the input dataset to a single e
 ```
 repeat(count=None)                     # Repeats this dataset count times.
 ```
+Dataset.repeat() transformation concatenates its arguments without signaling the end of one epoch and the beginning of the next epoch.
+```
+filenames = ["/var/data/file1.tfrecord", "/var/data/file2.tfrecord"]
+dataset = tf.data.TFRecordDataset(filenames)
+dataset = dataset.map(...)
+dataset = dataset.repeat(10)
+dataset = dataset.batch(32)
+```
+If you want to receive a signal at the end of each epoch, you can write a training loop that catches the tf.errors.OutOfRangeError at the end of a dataset. At that point you might collect some statistics (e.g. the validation error) for the epoch.
+```
+filenames = ["/var/data/file1.tfrecord", "/var/data/file2.tfrecord"]
+dataset = tf.data.TFRecordDataset(filenames)
+dataset = dataset.map(...)
+dataset = dataset.batch(32)
+iterator = dataset.make_initializable_iterator()
+next_element = iterator.get_next()
+
+# Compute for 100 epochs.
+for _ in range(100):
+  sess.run(iterator.initializer)
+  while True:
+    try:
+      sess.run(next_element)
+    except tf.errors.OutOfRangeError:
+      break
+
+  # [Perform end-of-epoch calculations here.]
+```
+
+
 ```
 shuffle(                               # Randomly shuffles the elements of this dataset.
     buffer_size,
