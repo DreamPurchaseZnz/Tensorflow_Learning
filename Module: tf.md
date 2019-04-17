@@ -19,13 +19,15 @@ tf.squeeze                                   ---> Removes dimensions of size 1 f
 tf.tile                                      ---> Construct a tenosr by tiling a given tensor
 tf.concat                                    ---> Concatenates tensors along one dimension
 tf.minimum                                   ---> Returns the min of x and y (i.e. x < y ? x : y) element-wise.
-tf.maximum                                     
+tf.maximum   
+tf.pad
 ```
 ## tf.cond
 
 ```
 cond(
-    pred,                                   ---> a scalar determining whether  to return the result of true_fn or false_fn
+    pred,                                   ---> a scalar determining whether 
+                                                 to return the result of true_fn or false_fn
     true_fn=None,                           ---> the callable to be performed if pred is True
     false_fn=None,                          ---> the callable to be performed if pred is False
     strict=False,                           ---> a boolean that enables/disables strict mode
@@ -48,7 +50,8 @@ insert a dimension of 1 into a tensor's shape
 ```
 expand_dims(
     input,                       ---> A tensor
-    axis=None,                   ---> A scalar, Specifies the dimension index at which to expand the shape of input
+    axis=None,                   ---> A scalar, Specifies the dimension \
+                                      index at which to expand the shape of input
     name=None,
     dim=None
 )
@@ -91,4 +94,39 @@ f= tf.concat(g,axis = 0)
 
 ## tf.random_normal_initializer
 
+## tf.pad
+```
+tf.pad(
+    tensor,
+    paddings,
+    mode='CONSTANT',
+    name=None,
+    constant_values=0
+)
+```
+Pads a tensor.
+
+This operation pads a tensor according to the paddings you specify. paddings is an integer tensor with shape 
+```
+[n, 2], 
+[[df, db]
+[df, db]]
+```
+where n is the rank of tensor. For each dimension D of input, paddings\[D, 0] indicates how many values to add before the contents of tensor in that dimension, and paddings\[D, 1] indicates how many values to add after the contents of tensor in that dimension. If mode is "REFLECT" then both paddings\[D, 0] and paddings\[D, 1] must be no greater than tensor.dim_size(D) - 1. If mode is "SYMMETRIC" then both paddings\[D, 0] and paddings\[D, 1] must be no greater than tensor.dim_size(D).
+
+The padded size of each dimension D of the output is:
+
+paddings\[D, 0] + tensor.dim_size(D) + paddings\[D, 1]
+
+##  tf.shape
+```
+tf.shape(
+    input,
+    name=None,
+    out_type=tf.dtypes.int32
+)
+```
+Returns the shape of a tensor.
+
+This operation returns a 1-D integer tensor representing the shape of input.
 
