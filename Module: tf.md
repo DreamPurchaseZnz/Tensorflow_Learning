@@ -22,7 +22,7 @@ tf.minimum                                   ---> Returns the min of x and y (i.
 tf.maximum   
 tf.pad
 ```
-## tf.cond
+### tf.cond
 
 ```
 cond(
@@ -45,7 +45,7 @@ result = tf.cond(x < y, lambda: tf.add(x, z), lambda: tf.square(y))
 
 
 
-## tf.expand_dims
+### tf.expand_dims
 insert a dimension of 1 into a tensor's shape
 ```
 expand_dims(
@@ -92,9 +92,8 @@ f= tf.concat(g,axis = 0)
 
 ```
 
-## tf.random_normal_initializer
 
-## tf.pad
+### tf.pad
 ```
 tf.pad(
     tensor,
@@ -118,7 +117,7 @@ The padded size of each dimension D of the output is:
 
 paddings\[D, 0] + tensor.dim_size(D) + paddings\[D, 1]
 
-##  tf.shape
+###  tf.shape
 ```
 tf.shape(
     input,
@@ -130,3 +129,18 @@ Returns the shape of a tensor.
 
 This operation returns a 1-D integer tensor representing the shape of input.
 
+### tf.shape Vs a.get_shape()
+I see most people confused about tf.shape(tensor) and tensor.get_shape() Let's make it clear:
+```
+tf.shape
+```
+tf.shape is used for dynamic shape. If your tensor's shape is changable, use it. An example: a input is an image with changable width and height, we want resize it to half of its size, then we can write something like:
+```
+new_height = tf.shape(image)[0] / 2
+```
+```
+tensor.get_shape
+```
+tensor.get_shape is used for fixed shapes, which means the tensor's shape can be deduced in the graph.
+
+Conclusion: tf.shape can be used almost anywhere, but t.get_shape only for shapes can be deduced from graph.
