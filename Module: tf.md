@@ -22,6 +22,30 @@ tf.minimum                                   ---> Returns the min of x and y (i.
 tf.maximum   
 tf.pad
 ```
+### dynamic shape and static shape
+In TensorFlow, a tensor has both a static (inferred) shape and a dynamic (true) shape. 
+
+The static shape can be read using the tf.Tensor.get_shape() method: this shape is inferred from the operations that were used to create the tensor, and may be partially complete. 
+
+If the static shape is not fully defined, the dynamic shape of a Tensor t can be determined by evaluating tf.shape(t).
+
+### tf.shape Vs a.get_shape()
+I see most people confused about tf.shape(tensor) and tensor.get_shape() Let's make it clear:
+```
+tf.shape
+```
+tf.shape is used for dynamic shape. If your tensor's shape is changable, use it. An example: a input is an image with changable width and height, we want resize it to half of its size, then we can write something like:
+```
+new_height = tf.shape(image)[0] / 2
+```
+```
+tensor.get_shape
+```
+tensor.get_shape is used for fixed shapes, which means the tensor's shape can be deduced in the graph.
+
+Conclusion: tf.shape can be used almost anywhere, but t.get_shape only for shapes can be deduced from graph.
+
+
 ### tf.cond
 
 ```
@@ -129,18 +153,3 @@ Returns the shape of a tensor.
 
 This operation returns a 1-D integer tensor representing the shape of input.
 
-### tf.shape Vs a.get_shape()
-I see most people confused about tf.shape(tensor) and tensor.get_shape() Let's make it clear:
-```
-tf.shape
-```
-tf.shape is used for dynamic shape. If your tensor's shape is changable, use it. An example: a input is an image with changable width and height, we want resize it to half of its size, then we can write something like:
-```
-new_height = tf.shape(image)[0] / 2
-```
-```
-tensor.get_shape
-```
-tensor.get_shape is used for fixed shapes, which means the tensor's shape can be deduced in the graph.
-
-Conclusion: tf.shape can be used almost anywhere, but t.get_shape only for shapes can be deduced from graph.
