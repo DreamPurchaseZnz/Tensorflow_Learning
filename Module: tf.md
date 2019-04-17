@@ -4,7 +4,6 @@ Module: tf
 tf.reshape
 tf.placeholder
 tf.Variable
-
 tf.tuple
 tf.group
 tf.random_uniform
@@ -152,4 +151,35 @@ tf.shape(
 Returns the shape of a tensor.
 
 This operation returns a 1-D integer tensor representing the shape of input.
+
+### tf.FixedLenSequenceFeature
+```
+tf.FixedLenSequenceFeature(
+    shape,
+    dtype,
+    allow_missing=False,
+    default_value=None
+)
+```
+Configuration for parsing a variable-length input feature into a Tensor.
+
+The resulting Tensor of parsing a single SequenceExample or Example has a static shape of \[None] + shape and the specified dtype. The resulting Tensor of parsing a batch_size many Examples has a static shape of \[batch_size, None] + shape and the specified dtype. The entries in the batch from different Examples will be padded with default_value to the maximum length present in the batch.
+
+To treat a sparse input as dense, provide allow_missing=True; otherwise, the parse functions will fail on any examples missing this feature.
+
+### tf.parse_single_sequence_example
+```
+tf.parse_single_sequence_example(
+    serialized,
+    context_features=None,
+    sequence_features=None,
+    example_name=None,
+    name=None
+)
+```
+
+
+
+
+
 
