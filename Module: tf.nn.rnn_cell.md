@@ -7,6 +7,10 @@
  tf.contrib.rnn.GRUBlockCellV2
  tf.contrib.rnn.LSTMBlockCell
  tf.contrib.rnn.LSTMBlockFusedCell
+ tf.contrib.rnn.TimeReversedFusedRNN
+ tf.contrib.rnn.stack_bidirectional_dynamic_rnn
+ tf.nn.rnn_cell.MultiRNNCell
+ tf.nn.dynamic_rnn
 ```
 
 
