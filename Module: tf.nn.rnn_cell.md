@@ -1,5 +1,18 @@
 # RNN-recurrent neural networks
 ---------------------------------------------------------------------------------------------------
+## [Core RNN Cell wrappers (RNNCells that wrap other RNNCells)](https://www.tensorflow.org/api_guides/python/contrib.rnn#Core_RNN_Cell_wrappers_RNNCells_that_wrap_other_RNNCells_)
+
+```
+ tf.contrib.rnn.BasicRNNCell
+ tf.contrib.rnn.GRUBlockCellV2
+ tf.contrib.rnn.LSTMBlockCell
+ tf.contrib.rnn.LSTMBlockFusedCell
+```
+
+
+
+
+
 
 ## RNN AND EMBEDDING AND SAMPLER 
 ```
