@@ -1,3 +1,18 @@
+# Tesing your code
+Basicly, we need to test our self-created code. In my practice, I would like to achieve my model in this way
+```
+1. draw the rough sketch of total structure
+2. Tear it apart and test the slice code sequentially
+3. Conbine some module and test the whole function.
+```
+Also this pipeline throw a quetion that if some substantial setting may ignored when you are just testing your code. And there may exists
+anthoer method to build your computational graph, like one-shot method
+```
+1. write the code to have fine details in the begining 
+2. sequentially write the following codes and test the code
+3. rewrite some modules in your precious codes and continue the step 2
+```
+It is also neccessary to launch a session to run your code.
 # Session and InteractiveSession
 The only difference with a regular Session is that an InteractiveSession installs itself as the default session on construction. The methods tf.Tensor.eval and tf.Operation.run will use that session to run ops.
 
