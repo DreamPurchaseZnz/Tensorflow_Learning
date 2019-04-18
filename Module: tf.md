@@ -20,7 +20,31 @@ tf.concat                                    ---> Concatenates tensors along one
 tf.minimum                                   ---> Returns the min of x and y (i.e. x < y ? x : y) element-wise.
 tf.maximum   
 tf.pad
+tf.multiply                                  ---> element-wise multiply operation
+tf.matmul                                    
 ```
+### tf.multiply and tf.matmul
+```
+tf.linalg.matmul(
+    a,
+    b,
+    transpose_a=False,
+    transpose_b=False,
+    adjoint_a=False,
+    adjoint_b=False,
+    a_is_sparse=False,
+    b_is_sparse=False,
+    name=None
+)
+```
+
+Multiplies matrix a by matrix b, producing a * b.
+
+The inputs must, following any transpositions, be tensors of rank >= 2 where the inner 2 dimensions specify valid matrix multiplication arguments, and any further outer dimensions match.
+
+
+
+
 ### dynamic shape and static shape
 In TensorFlow, a tensor has both a static (inferred) shape and a dynamic (true) shape. 
 
