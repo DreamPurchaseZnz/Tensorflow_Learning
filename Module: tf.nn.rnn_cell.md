@@ -6,11 +6,13 @@
  tf.contrib.rnn.BasicRNNCell
  tf.nn.dynamic_rnn
  tf.contrib.rnn.GRUBlockCellV2
- tf.contrib.rnn.LSTMBlockCell
- tf.contrib.rnn.LSTMBlockFusedCell
+ tf.contrib.rnn.LSTMBlockCell                      # Input:(Time, batch, features)
+ tf.contrib.rnn.LSTMBlockFusedCell                 # Input:(Time, batch, features)
  tf.contrib.rnn.TimeReversedFusedRNN
- tf.contrib.rnn.stack_bidirectional_dynamic_rnn
- tf.nn.rnn_cell.MultiRNNCell
+ tf.contrib.rnn.stack_bidirectional_dynamic_rnn    # stack bidirectional rnn
+                                                     The combined forward and backward
+                                                     layer outputs are used as input of the next layer
+ tf.nn.rnn_cell.MultiRNNCell                       # Stack the LSTM cells
 ```
 ### tf.nn.rnn_cell.BasicRNNCell
 ```
