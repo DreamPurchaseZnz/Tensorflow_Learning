@@ -4,13 +4,13 @@
 
 ```
  tf.contrib.rnn.BasicRNNCell
+ tf.nn.dynamic_rnn
  tf.contrib.rnn.GRUBlockCellV2
  tf.contrib.rnn.LSTMBlockCell
  tf.contrib.rnn.LSTMBlockFusedCell
  tf.contrib.rnn.TimeReversedFusedRNN
  tf.contrib.rnn.stack_bidirectional_dynamic_rnn
  tf.nn.rnn_cell.MultiRNNCell
- tf.nn.dynamic_rnn
 ```
 ### tf.nn.rnn_cell.BasicRNNCell
 ```
@@ -101,6 +101,53 @@ get_updates_for(inputs)
 get_output_shape_at(node_index)
 get_output_mask_at(node_index)
 ```
+
+### tf.nn.dynamic_rnn
+```
+tf.nn.dynamic_rnn(
+    cell,                      # An instance of RNNCell.
+    inputs,                    # [batch_size, max_time, ...]
+    sequence_length=None,
+    initial_state=None,
+    dtype=None,
+    parallel_iterations=None,
+    swap_memory=False,
+    time_major=False,          #  The shape format of the inputs and outputs Tensors
+    scope=None
+)
+```
+```
+# create a BasicRNNCell
+rnn_cell = tf.nn.rnn_cell.BasicRNNCell(hidden_size)
+
+# 'outputs' is a tensor of shape [batch_size, max_time, cell_state_size]
+
+# defining initial state
+initial_state = rnn_cell.zero_state(batch_size, dtype=tf.float32)
+
+# 'state' is a tensor of shape [batch_size, cell_state_size]
+outputs, state = tf.nn.dynamic_rnn(rnn_cell, input_data,
+                                   initial_state=initial_state,
+                                   dtype=tf.float32)
+```
+
+```
+# create 2 LSTMCells
+rnn_layers = [tf.nn.rnn_cell.LSTMCell(size) for size in [128, 256]]
+
+# create a RNN cell composed sequentially of a number of RNNCells
+multi_rnn_cell = tf.nn.rnn_cell.MultiRNNCell(rnn_layers)
+
+# 'outputs' is a tensor of shape [batch_size, max_time, 256]
+# 'state' is a N-tuple where N is the number of LSTMCells containing a
+# tf.contrib.rnn.LSTMStateTuple for each cell
+outputs, state = tf.nn.dynamic_rnn(cell=multi_rnn_cell,
+                                   inputs=data,
+                                   dtype=tf.float32)
+```
+
+
+
 ### tf.contrib.rnn.LSTMBlockCell
 ```
 __init__(
@@ -216,49 +263,6 @@ __call__(
     state,                 # [batch_size, self.state_size]
     scope=None
 )
-```
-### tf.nn.dynamic_rnn
-```
-tf.nn.dynamic_rnn(
-    cell,                      # An instance of RNNCell.
-    inputs,                    # [batch_size, max_time, ...]
-    sequence_length=None,
-    initial_state=None,
-    dtype=None,
-    parallel_iterations=None,
-    swap_memory=False,
-    time_major=False,          #  The shape format of the inputs and outputs Tensors
-    scope=None
-)
-```
-```
-# create a BasicRNNCell
-rnn_cell = tf.nn.rnn_cell.BasicRNNCell(hidden_size)
-
-# 'outputs' is a tensor of shape [batch_size, max_time, cell_state_size]
-
-# defining initial state
-initial_state = rnn_cell.zero_state(batch_size, dtype=tf.float32)
-
-# 'state' is a tensor of shape [batch_size, cell_state_size]
-outputs, state = tf.nn.dynamic_rnn(rnn_cell, input_data,
-                                   initial_state=initial_state,
-                                   dtype=tf.float32)
-```
-
-```
-# create 2 LSTMCells
-rnn_layers = [tf.nn.rnn_cell.LSTMCell(size) for size in [128, 256]]
-
-# create a RNN cell composed sequentially of a number of RNNCells
-multi_rnn_cell = tf.nn.rnn_cell.MultiRNNCell(rnn_layers)
-
-# 'outputs' is a tensor of shape [batch_size, max_time, 256]
-# 'state' is a N-tuple where N is the number of LSTMCells containing a
-# tf.contrib.rnn.LSTMStateTuple for each cell
-outputs, state = tf.nn.dynamic_rnn(cell=multi_rnn_cell,
-                                   inputs=data,
-                                   dtype=tf.float32)
 ```
 
 
