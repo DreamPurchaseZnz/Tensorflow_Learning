@@ -21,6 +21,21 @@ tf.contrib.rnn.stack_bidirectional_dynamic_rnn    # stack bidirectional rnn
                                                     layer outputs are used as input of the next layer
 tf.nn.rnn_cell.MultiRNNCell                       # stack RNNcell
 ```
+### tf.nn.dynamic_rnn Vs tf.nn.static_rnn
+
+pass
+
+
+### stack_bidirectional_dynamic_rnn Vs MultiRNNCell&dynamic_rnn
+```
+tf.nn.rnn_cell.MultiRNNCell
+tf.nn.dynamic_rnn
+```
+is equal to 
+```
+tf.contrib.rnn.stack_bidirectional_dynamic_rnn 
+```
+The difference between the two function is direction.
 
 ### Fuased LSTM vs the LSTMcells
 When the two command come across, sys will throw an error.
