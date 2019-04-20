@@ -1,19 +1,25 @@
 # RNN-recurrent neural networks
 ---------------------------------------------------------------------------------------------------
-## [Core RNN Cell wrappers (RNNCells that wrap other RNNCells)](https://www.tensorflow.org/api_guides/python/contrib.rnn#Core_RNN_Cell_wrappers_RNNCells_that_wrap_other_RNNCells_)
+## Core RNN Cell wrappers (RNNCells that wrap other RNNCells)
 
+RNN cells:
 ```
- tf.contrib.rnn.BasicRNNCell
- tf.nn.dynamic_rnn
- tf.contrib.rnn.GRUBlockCellV2
- tf.contrib.rnn.LSTMBlockCell                      # Input:(Time, batch, features)
- tf.contrib.rnn.LSTMBlockFusedCell                 # Input:(Time, batch, features)
- tf.contrib.rnn.TimeReversedFusedRNN
- tf.contrib.rnn.stack_bidirectional_dynamic_rnn    # stack bidirectional rnn
-                                                     The combined forward and backward
-                                                     layer outputs are used as input of the next layer
- tf.nn.rnn_cell.MultiRNNCell                       # Stack the LSTM cells
+tf.contrib.rnn.BasicRNNCell                       # [batch_size, input_size], Need to feed step by step
+tf.contrib.rnn.GRUBlockCellV2                     # Input:(Time, batch, features)
+tf.contrib.rnn.LSTMBlockCell                      # Input:(Time, batch, features)
+tf.contrib.rnn.LSTMBlockFusedCell                 # Input:(Time, batch, features)
+tf.contrib.rnn.TimeReversedFusedRNN               # Input:(Time, batch, features)
 ```
+
+Cell concatenation:
+```
+tf.nn.dynamic_rnn
+tf.contrib.rnn.stack_bidirectional_dynamic_rnn    # stack bidirectional rnn
+                                                    The combined forward and backward
+                                                    layer outputs are used as input of the next layer
+tf.nn.rnn_cell.MultiRNNCell                       # Stack the LSTM cells
+```
+
 ### tf.nn.rnn_cell.BasicRNNCell
 ```
 tf.contrib.rnn.BasicRNNCell
