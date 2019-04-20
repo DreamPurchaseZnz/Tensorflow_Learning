@@ -130,3 +130,7 @@ m = TfModel(
 output_sequence = input_sequence
 input_length = input_sequence_length
 output_sequence = tf.transpose(output_sequence, [1, 0, 2])
+
+
+
+
