@@ -22,33 +22,109 @@ tf.contrib.rnn.stack_bidirectional_dynamic_rnn    # stack bidirectional rnn
 tf.nn.rnn_cell.MultiRNNCell                       # stack RNNcell
 ```
 ### LSTMcell Vs Fused LSTMcell
-pass
+LSTMCell is more flexible and you need less code with LSTM .
+```
+def forward(self, x):
+    h = self.get_hidden() 
+    for input in x:  
+        h = self.rnn(input, h) # self.rnn = self.LSTMCell(input_size, hidden_size)
+```
+Basically, LSTMCell has support for optional peep-hole connections, optional cell clipping, 
+and an optional projection layer, 
+whereas the BasicLSTMCell does not have support for any of those. 
+In many cases, you also don’t need this. But in my benchmark, 
+it seems as if there is actually not much performance difference, even the LSTMCell can be faster, 
+thus maybe you just would use that one.
 
 ### tf.nn.dynamic_rnn Vs tf.nn.static_rnn
+```
+tf.nn.dynamic_rnn                # unroll the LSTM cell dynamicly 
+                                   According to the model and hardware configuration
+tf.nn.static_rnn                 # unroll the whole rnn cell.
+```
+When using one of the cells, *rather than the fully fused RNN layers*, 
+you have a choice of whether to use tf.nn.static_rnn or tf.nn.dynamic_rnn. There shouldn't generally be a performance difference at runtime, 
+but large unroll amounts can increase the graph size of the tf.nn.static_rnn and cause long compile times.
+An additional advantage of tf.nn.dynamic_rnn is that it can optionally swap memory from the GPU to the CPU to enable training of very long sequences. Depending on the model and hardware configuration, this can come at a performance cost. It is also possible to run multiple iterations of tf.nn.dynamic_rnn and the underlying tf.while_loop construct in parallel, although this is rarely useful with RNN models as they are inherently sequential.
 
-pass
+On NVIDIA GPUs, the use of tf.contrib.cudnn_rnn should always be preferred unless you want layer normalization, 
+which it doesn't support. It is often at least an order of magnitude faster than tf.contrib.rnn.BasicLSTMCell and tf.contrib.rnn.LSTMBlockCell and uses 3-4x less memory than tf.contrib.rnn.BasicLSTMCell.
+
+And tf.contrib.cudnn_rnn
+```
+class CudnnCompatibleGRUCell:    Cudnn Compatible GRUCell.
+class CudnnCompatibleLSTMCell: Cudnn Compatible LSTMCell.
+class CudnnGRU: Cudnn implementation of the GRU layer.
+class CudnnGRUSaveable: SaveableObject implementation handling Cudnn GRU opaque params.
+class CudnnLSTM: Cudnn implementation of LSTM layer.
+class CudnnLSTMSaveable: SaveableObject implementation handling Cudnn LSTM opaque params.
+class CudnnParamsFormatConverterGRU: Helper class that converts between params of Cudnn and TF GRU.
+class CudnnParamsFormatConverterLSTM: Helper class that converts between params of Cudnn and TF LSTM.
+class CudnnParamsFormatConverterRelu: Helper class that converts between params of Cudnn and TF Relu RNN.
+class CudnnParamsFormatConverterTanh: Helper class that converts between params of Cudnn and TF Tanh RNN.
+class CudnnRNNRelu: Cudnn implementation of the RNN-relu layer.
+class CudnnRNNReluSaveable: SaveableObject implementation handling Cudnn LSTM opaque params.
+class CudnnRNNTanh: Cudnn implementation of the RNN-tanh layer.
+class CudnnRNNTanhSaveable: SaveableObject implementation handling Cudnn LSTM opaque params.
+```
+On CPUs, mobile devices, and if tf.contrib.cudnn_rnn is not available on your GPU, the fastest and most memory efficient option is tf.contrib.rnn.LSTMBlockFusedCell.
+
+
+For all of the less common cell types like 
+```
+tf.contrib.rnn.NASCell, 
+tf.contrib.rnn.PhasedLSTMCell, 
+tf.contrib.rnn.UGRNNCell, 
+tf.contrib.rnn.GLSTMCell, 
+tf.contrib.rnn.Conv1DLSTMCell, 
+tf.contrib.rnn.Conv2DLSTMCell, 
+tf.contrib.rnn.LayerNormBasicLSTMCell, etc., 
+```
+be aware that they are implemented in the graph like tf.contrib.rnn.BasicLSTMCell and will suffer from the same poor performance and high memory usage. Consider whether or not those trade-offs are worth it before using these cells. For example, while layer normalization can speed up convergence, because cuDNN is 20x faster, the fastest wall clock time to convergence is usually obtained without it.
 
 
 ### stack_bidirectional_dynamic_rnn Vs MultiRNNCell&dynamic_rnn
+Only for the LSTMCell
 ```
-tf.nn.rnn_cell.MultiRNNCell
-tf.nn.dynamic_rnn
+tf.nn.rnn_cell.MultiRNNCell                     # concatenate the cells
+tf.nn.dynamic_rnn                               # unroll the time step 
 ```
 is equal to 
+
+Universal for LSTMfusedCell.
+```
+for cell in self._rnns:                         # For loop along the layer
+  output_sequence, new_state = cell(
+      inputs=output_sequence,
+      sequence_length=input_length,
+      dtype=tf.float32)
+  new_states.append(new_state)
+```
+For multi-layer constructions of fused LSTM and  LSTM
 ```
 tf.contrib.rnn.stack_bidirectional_dynamic_rnn 
 ```
-The difference between the two function is direction.
 
-There is a more fundamental way to construct:
+
+Example:
+
+```
+self._cell_fn = tf.contrib.rnn.LSTMBlockCell
+self._rnns = tf.nn.rnn_cell.MultiRNNCell([
+            self._cell_fn(self._rnn_num_hidden,
+                          name="{0}_{1}".format(rnn_cell, i))
+            for i in range(self._rnn_depth)
+        ])
+output_sequence, final_state = tf.nn.dynamic_rnn(        # rollout along the time step.
+            cell=self._rnns,
+            inputs=output_sequence,
+            sequence_length=input_length,
+            dtype=tf.float32)
 ```
 
-```
 
 
-
-
-### Fuased LSTM vs the LSTMcells
+### An error
 When the two command come across, sys will throw an error.
 ```
 tf.contrib.rnn.LSTMBlockFusedCell
@@ -66,7 +142,25 @@ is not an RNNCell:
 tf.contrib.rnn.LSTMBlockCell
 tf.contrib.rnn.stack_bidirectional_dynamic_rnn  or tf.nn.dynamic_rnn
 ```
+```
+fw_new_states, bw_new_states = [], []
+for i in range(self._rnn_depth):
+    fw_output, fw_new_state = self._rnns["fw"][i](
+        inputs=output_sequence,
+        sequence_length=input_length,
+        dtype=tf.float32)
+    fw_new_states.append(fw_new_state)
 
+    bw_output, bw_new_state = self._rnns["bw"][i](
+        inputs=output_sequence,
+        sequence_length=input_length,
+        dtype=tf.float32)
+    bw_new_states.append(bw_new_state)
+    output_sequence = tf.concat([fw_output, bw_output], axis=-1)
+
+final_state_fw = tuple(fw_new_states)
+final_state_bw = tuple(bw_new_states)
+```
 
 ### tf.nn.rnn_cell.BasicRNNCell
 ```
