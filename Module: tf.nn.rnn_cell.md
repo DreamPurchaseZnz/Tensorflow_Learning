@@ -17,7 +17,7 @@ tf.nn.dynamic_rnn
 tf.contrib.rnn.stack_bidirectional_dynamic_rnn    # stack bidirectional rnn
                                                     The combined forward and backward
                                                     layer outputs are used as input of the next layer
-tf.nn.rnn_cell.MultiRNNCell                       # Stack the LSTM cells
+tf.nn.rnn_cell.MultiRNNCell                       # stack RNNcell
 ```
 
 ### tf.nn.rnn_cell.BasicRNNCell
