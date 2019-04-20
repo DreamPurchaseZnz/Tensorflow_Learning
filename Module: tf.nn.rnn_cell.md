@@ -91,7 +91,7 @@ tf.nn.dynamic_rnn                               # unroll the time step
 ```
 is equal to 
 
-Universal for LSTMfusedCell.
+Only for LSTMfusedCell.
 ```
 for cell in self._rnns:                         # For loop along the layer
   output_sequence, new_state = cell(
@@ -124,7 +124,8 @@ output_sequence, final_state = tf.nn.dynamic_rnn(        # rollout along the tim
 
 
 
-### An error
+### Construction Errors: LSTMBlockFusedCell Vs LSTMBlockCell
+#### LSTMBlockFusedCell
 When the two command come across, sys will throw an error.
 ```
 tf.contrib.rnn.LSTMBlockFusedCell
@@ -161,6 +162,31 @@ for i in range(self._rnn_depth):
 final_state_fw = tuple(fw_new_states)
 final_state_bw = tuple(bw_new_states)
 ```
+### LSTMBlockCell
+```
+output_sequence = tf.transpose(output_sequence, [1, 0, 2])
+
+output_sequence, new_state = m._rnns[0](
+        inputs=output_sequence,
+        sequence_length=input_length,
+        dtype=tf.float32)
+
+new_states = []
+for cell in m._rnns:
+    output_sequence, new_state = cell(
+        inputs=output_sequence,
+        sequence_length=input_length,
+        dtype=tf.float32)
+    new_states.append(new_state)
+```
+Will throw an error
+```
+Traceback (most recent call last):
+  File "<input>", line 4, in <module>
+TypeError: __call__() missing 1 required positional argument: 'state'
+```
+
+
 
 ### tf.nn.rnn_cell.BasicRNNCell
 ```
