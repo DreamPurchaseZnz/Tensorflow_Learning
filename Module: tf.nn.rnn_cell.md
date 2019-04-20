@@ -7,7 +7,9 @@ RNN cells:
 tf.contrib.rnn.BasicRNNCell                       # [batch_size, input_size], Need to feed step by step
 tf.contrib.rnn.GRUBlockCellV2                     # Input:(Time, batch, features)
 tf.contrib.rnn.LSTMBlockCell                      # Input:(Time, batch, features)
+                                                    Call: need state
 tf.contrib.rnn.LSTMBlockFusedCell                 # Input:(Time, batch, features)
+                                                    Call: only inputs
 tf.contrib.rnn.TimeReversedFusedRNN               # Input:(Time, batch, features)
 ```
 
