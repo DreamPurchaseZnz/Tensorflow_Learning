@@ -22,19 +22,23 @@ tf.contrib.rnn.stack_bidirectional_dynamic_rnn    # stack bidirectional rnn
 tf.nn.rnn_cell.MultiRNNCell                       # stack RNNcell
 ```
 
-### 
+### Fuased LSTM vs the LSTMcells
 When the two command come across, sys will throw an error.
 ```
-x tf.contrib.rnn.LSTMBlockCell
-tf.contrib.rnn.stack_bidirectional_dynamic_rnn 
+tf.contrib.rnn.LSTMBlockFusedCell
+tf.contrib.rnn.stack_bidirectional_dynamic_rnn  or tf.nn.dynamic_rnn
 ```
 ```
-TypeError: The argument 'cell_fw' (<tensorflow.contrib.rnn.python.ops.lstm_ops.LSTMBlockFusedCell object at 0x7fade1d525c0>)
-is not an RNNCell: 'output_size' property is missing, 'state_size' property is missing, 'zero_state' method is missing.
+TypeError: The argument 'cell_fw' 
+(<tensorflow.contrib.rnn.python.ops.lstm_ops.LSTMBlockFusedCell object at 0x7fade1d525c0>)
+is not an RNNCell: 
+'output_size' property is missing, 
+'state_size' property is missing, 
+'zero_state' method is missing.
 ```
 ```
 tf.contrib.rnn.LSTMBlockCell
-tf.contrib.rnn.stack_bidirectional_dynamic_rnn 
+tf.contrib.rnn.stack_bidirectional_dynamic_rnn  or tf.nn.dynamic_rnn
 ```
 
 
