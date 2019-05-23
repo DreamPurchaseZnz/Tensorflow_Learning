@@ -29,30 +29,22 @@ output_classes                     # The expected values are tf.Tensor and tf.Sp
 output_shapes                      # each componet of an element of this dataset
 output_types
 ```
-```
-dataset1 = tf.data.Dataset.from_tensor_slices(tf.random_uniform([4, 10]))
-print(dataset1.output_types)  # ==> "tf.float32"
-print(dataset1.output_shapes)  # ==> "(10,)"
-
-dataset2 = tf.data.Dataset.from_tensor_slices(
-   (tf.random_uniform([4]),
-    tf.random_uniform([4, 100], maxval=100, dtype=tf.int32)))
-print(dataset2.output_types)  # ==> "(tf.float32, tf.int32)"
-print(dataset2.output_shapes)  # ==> "((), (100,))"
-
-dataset3 = tf.data.Dataset.zip((dataset1, dataset2))
-print(dataset3.output_types)  # ==> (tf.float32, (tf.float32, tf.int32))
-print(dataset3.output_shapes)  # ==> "(10, ((), (100,)))"
-```
-```
-dataset = tf.data.Dataset.from_tensor_slices(
-   {"a": tf.random_uniform([4]),
-    "b": tf.random_uniform([4, 100], maxval=100, dtype=tf.int32)})
-print(dataset.output_types)  # ==> "{'a': tf.float32, 'b': tf.int32}"
-print(dataset.output_shapes)  # ==> "{'a': (), 'b': (100,)}"
-```
 
 ### Methods
+```
+apply(transformation_func)  
+batch(batch_size, drop_remainder=False)
+cache(filename='')
+concatenate(dataset) 
+from_tensor_slices(tensors)
+from_tensors(tensors) 
+interleave( map_func, cycle_length,  block_length=1,  num_parallel_calls=None)
+list_files
+make_initializable_iterator
+make_one_shot_iterator
+map
+padded_batch
+```
 ```
 apply(transformation_func)            # Applies a transformation function to this dataset.
 ```
@@ -258,7 +250,7 @@ initializable,
 reinitializable, and
 feedable.
 ```
-#### one-shot
+#### Par1: one-shot
 A one-shot iterator is the simplest form of iterator, which only supports iterating once through a dataset, with no need for explicit initialization. One-shot iterators handle almost all of the cases that the existing queue-based input pipelines support, but they do not support parameterization. Using the example of Dataset.range():
 
 ```
@@ -270,7 +262,7 @@ for i in range(100):
   value = sess.run(next_element)
   assert i == value
 ```
-#### initializable Iterator
+#### Par2: initializable Iterator
 An initializable iterator requires you to run an explicit iterator.initializer operation before using it. In exchange for this inconvenience, it enables you to parameterize the definition of the dataset, using one or more tf.placeholder() tensors that can be fed when you initialize the iterator. Continuing the Dataset.range() example:
 ```
 max_value = tf.placeholder(tf.int64, shape=[])
@@ -290,7 +282,7 @@ for i in range(100):
   value = sess.run(next_element)
   assert i == value
 ```
-#### reinitializable Iterator
+#### Par3: reinitializable Iterator
 A reinitializable iterator can be initialized from multiple different Dataset objects. For example, you might have a training input pipeline that uses random perturbations to the input images to improve generalization, and a validation input pipeline that evaluates predictions on unmodified data. These pipelines will typically use different Dataset objects that have the same structure (i.e. the same types and compatible shapes for each component).
 ```
 # Define training and validation datasets with the same structure.
@@ -321,7 +313,7 @@ for _ in range(20):
   for _ in range(50):
     sess.run(next_element)
 ```
-#### feedable iterator
+#### Par4: feedable iterator
 A feedable iterator can be used together with tf.placeholder to select what Iterator to use in each call to tf.Session.run, via the familiar feed_dict mechanism. It offers the same functionality as a reinitializable iterator, but it does not require you to initialize the iterator from the start of a dataset when you switch between iterators. For example, using the same training and validation example from above, you can use tf.data.Iterator.from_string_handle to define a feedable iterator that allows you to switch between the two datasets:
 ```
 # Define training and validation datasets with the same structure.
