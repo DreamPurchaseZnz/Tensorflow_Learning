@@ -2,6 +2,54 @@
 ```
 tf.data.Dataset                      # for input pipelines
 ```
+## Interleave
+```
+interleave(
+    map_func,
+    cycle_length,
+    block_length=1,
+    num_parallel_calls=None)
+    
+```
+
+Maps map_func across this dataset, and interleaves the results.
+
+For example, you can use Dataset.interleave() to process many input files concurrently:
+```
+# Preprocess 4 files concurrently, and interleave blocks of 16 records from
+# each file.
+filenames = ["/var/data/file1.txt", "/var/data/file2.txt", ...]
+dataset = (Dataset.from_tensor_slices(filenames)
+           .interleave(lambda x:
+               TextLineDataset(x).map(parse_fn, num_parallel_calls=1),
+               cycle_length=4, block_length=16))
+```
+The cycle_length and block_length arguments control the order in which elements are produced. cycle_length controls the number of input elements that are processed concurrently. If you set cycle_length to 1, this transformation will handle one input element at a time, and will produce identical results to tf.data.Dataset.flat_map. In general, this transformation will apply map_func to cycle_length input elements, open iterators on the returned Dataset objects, and cycle through them producing block_length consecutive elements from each iterator, and consuming the next input element each time it reaches the end of an iterator.
+
+For example:
+```
+# NOTE: The following examples use `{ ... }` to represent the
+# contents of a dataset.
+a = { 1, 2, 3, 4, 5 }
+
+# NOTE: New lines indicate "block" boundaries.
+a.interleave(lambda x: Dataset.from_tensors(x).repeat(6),
+             cycle_length=2, block_length=4) == {
+    1, 1, 1, 1,
+    2, 2, 2, 2,
+    1, 1,
+    2, 2,
+    3, 3, 3, 3,
+    4, 4, 4, 4,
+    3, 3,
+    4, 4,
+    5, 5, 5, 5,
+    5, 5,
+}
+```
+NOTE: The order of elements yielded by this transformation is deterministic, as long as map_func is a pure function. If map_func contains any stateful operations, the order in which that state is accessed is undefined.
+
+
 ## reference
 [datasets#consuming_numpy_arrays](https://www.tensorflow.org/guide/datasets#consuming_numpy_arrays)
 
