@@ -3,6 +3,29 @@
 tf.data.Dataset                      # for input pipelines
 ```
 ## Interleave
+
+map
+```
+map(
+    map_func,
+    num_parallel_calls=None
+)
+```
+
+Maps map_func across the elements of this dataset.
+
+This transformation applies map_func to each element of this dataset, and returns a new dataset containing the transformed elements, in the same order as they appeared in the input.
+
+The input signature of map_func is determined by the structure of each element in this dataset. 
+
+The value or values returned by map_func determine the structure of each element in the returned dataset.
+
+Args:
+```
+map_func: A function mapping a nested structure of tensors (having shapes and types defined by self.output_shapes and self.output_types) to another nested structure of tensors.
+num_parallel_calls: (Optional.) A tf.int32 scalar tf.Tensor, representing the number elements to process in parallel. If not specified, elements will be processed sequentially. If the value tf.data.experimental.AUTOTUNE is used, then the number of parallel calls is set dynamically based on available CPU.
+```
+
 ```
 interleave(
     map_func,
