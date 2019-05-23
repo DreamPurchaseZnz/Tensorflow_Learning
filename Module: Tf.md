@@ -21,7 +21,7 @@ tf.minimum                                   ---> Returns the min of x and y (i.
 tf.maximum   
 tf.pad
 tf.multiply                                  ---> element-wise multiply operation
-tf.matmul                                    
+tf.matmul  
 ```
 ### tf.multiply and tf.matmul
 ```
