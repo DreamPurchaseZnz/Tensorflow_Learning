@@ -477,7 +477,29 @@ feedable(log_time=log_time)
 
 sorted((value, key) for (key, value) in log_time.items())
 
+# Flatten a multi-element dataset:
+ds0 = tf.data.Dataset.range(0, 10, 2)
+ds1 = tf.data.Dataset.range(1, 10, 2)
 
+# Zip combines an element from each input into a single element, and flat_map
+# enables you to map the combined element into two elements, then flattens the
+# result.
+dataset=tf.data.Dataset.zip((ds0, ds1))
+print(dataset.output_shapes)
+
+dataset = tf.data.Dataset.zip((ds0, ds1)).flat_map(
+    lambda x0, x1: tf.data.Dataset.from_tensors(x0).concatenate(
+        tf.data.Dataset.from_tensors(x1)))
+
+iter = dataset.make_one_shot_iterator()
+val = iter.get_next()
+
+with tf.Session() as sess:
+    try:
+        while True:
+            print(sess.run(val))
+    except tf.errors.OutOfRangeError:
+        print("done")
 
 
 
