@@ -10,19 +10,24 @@ The *tf.Example message* (or protobuf) is a flexible message type that represent
 ## The whole process-Two stage
 Encode the message:
 ```
-tf.Example = {"string": tf.train.Feature} 
-tf.Example.SerializeToString()
+tf.Example{features}
+tf.train.Features(feature=features={"string": tf.train.Feature})
 tf.train.Feature(bytes_list, float_list, int64List)
 tf.train.BytesList(value=[value])
+tf.Example.SerializeToString()
+tf.python_io.TFRecordWriter()
+```
+To visit the value of string
+```
+example.features.feature['string'].bytes_list.value[0]
 ```
 Decode the message:
 ```
+tf.data.TFRecordDataset()
 tf.train.Example.FromString(serialized_example)
-feature_description = {
-    'string': tf.train.Feature
-}
-tf.parse_single_example(example_proto, feature_description)
-
+features_predifined = {'string': tf.FixedLenFeature()}
+tf.FixedLenFeature([], tf.int64)
+tf.parse_single_example(features_predifined)
 ```
 ## Tfrecord file
 #### TFRecord files using tf.data.experimental.TFRecordWriter
