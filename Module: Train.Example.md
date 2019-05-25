@@ -7,49 +7,96 @@ Protocol buffers are a cross-platform, cross-language library for efficient seri
 
 The *tf.Example message* (or protobuf) is a flexible message type that represents a {"string": value} mapping. It is designed for use with TensorFlow and is used throughout the higher-level APIs such as TFX.
 
-## tf.Example
-Fundamentally a tf.Example is a
+## The whole process-Two stage
+Encode the message:
 ```
-{"string": tf.train.Feature} 
+tf.Example = {"string": tf.train.Feature} 
+tf.Example.SerializeToString()
+tf.train.Feature(bytes_list, float_list, int64List)
+tf.train.BytesList(value=[value])
 ```
-mapping.
-
-The *tf.train.Feature* message type can accept one of the following three types (See the .proto file. Most other generic types can be coerced into one of these
-
-
-
-
-
-
-
-
-
-## tf.FixedLenSequenceFeature
+Decode the message:
 ```
-tf.FixedLenSequenceFeature(
-    shape,
-    dtype,
-    allow_missing=False,
-    default_value=None
-)
+tf.train.Example.FromString(serialized_example)
+feature_description = {
+    'string': tf.train.Feature
+}
+tf.parse_single_example(example_proto, feature_description)
+
 ```
-Configuration for parsing a variable-length input feature into a Tensor.
-
-The resulting Tensor of parsing a single SequenceExample or Example has a static shape of \[None] + shape and the specified dtype. The resulting Tensor of parsing a batch_size many Examples has a static shape of \[batch_size, None] + shape and the specified dtype. The entries in the batch from different Examples will be padded with default_value to the maximum length present in the batch.
-
-To treat a sparse input as dense, provide allow_missing=True; otherwise, the parse functions will fail on any examples missing this feature.
-
-## tf.parse_single_sequence_example
+## Tfrecord file
+#### TFRecord files using tf.data.experimental.TFRecordWriter
+Write them to a TFRecord file
 ```
-tf.io.parse_single_sequence_example(
-    serialized,
-    context_features=None,
-    sequence_features=None,
-    example_name=None,
-    name=None
-)
+filename = 'test.tfrecord'
+writer = tf.data.experimental.TFRecordWriter(filename)
+writer.write(serialized_features_dataset)
+```
+Reading a TFRecord file
+```
+filenames = [filename]
+raw_dataset = tf.data.TFRecordDataset(filenames)
+raw_dataset
+```
+#### TFRecord files using tf.python_io
+write a tfrecord file
+```
+with tf.python_io.TFRecordWriter(filename) as writer:
+  for i in range(n_observations):
+    example = serialize_example(feature0[i], feature1[i], feature2[i], feature3[i])
+    writer.write(example)
+```
+read a tfrecord file
+
+We iterate through the TFRecords in the infile, extract the tf.Example message, and can read/store the values within.
+```
+record_iterator = tf.python_io.tf_record_iterator(path=filename)
+
+for string_record in record_iterator:
+  example = tf.train.Example()
+  example.ParseFromString(string_record)
+  
+  print(example)
+  
+  # Exit after 1 iteration as this is purely demonstrative.
+  break
+  
+print(dict(example.features.feature))
+print(example.features.feature['feature3'].float_list.value)
 ```
 
+### tf.Example
+The tf.Example message (or protobuf) is a flexible message type that represents a {"string": value} mapping. 
+```
+tf.Example                          # a {"string": tf.train.Feature} mapping.
+```
+```
+def serialize_example(feature0, feature1, feature2, feature3):
+  """
+  Creates a tf.Example message ready to be written to a file.
+  """
+  
+  # Create a dictionary mapping the feature name to the tf.Example-compatible
+  # data type.
+  
+  feature = {
+      'feature0': _int64_feature(feature0),        # look ahead, meet in the next section
+      'feature1': _int64_feature(feature1),
+      'feature2': _bytes_feature(feature2),
+      'feature3': _float_feature(feature3),
+  }
+  
+  # Create a Features message using tf.train.Example.
+  
+  example_proto = tf.train.Example(features=tf.train.Features(feature=feature))
+  return example_proto.SerializeToString()
+```
+To decode the message use the 
+```
+tf.train.Example.FromString(serialized_example)       # from string to protomessages
+protomessage.SerializeToString                        # All the proto messages can 
+                                                        be serialized to binary-string 
+```
 
 ## TF.train.Features
 
@@ -92,37 +139,32 @@ def _int64_feature(value):
   """Returns an int64_list from a bool / enum / int / uint."""
   return tf.train.Feature(int64_list=tf.train.Int64List(value=[value]))
 ```
-### tf.Example
-The tf.Example message (or protobuf) is a flexible message type that represents a {"string": value} mapping. 
+
+
+## tf.FixedLenSequenceFeature
 ```
-tf.Example                          # a {"string": tf.train.Feature} mapping.
+tf.FixedLenSequenceFeature(
+    shape,
+    dtype,
+    allow_missing=False,
+    default_value=None
+)
 ```
+Configuration for parsing a variable-length input feature into a Tensor.
+
+The resulting Tensor of parsing a single SequenceExample or Example has a static shape of \[None] + shape and the specified dtype. The resulting Tensor of parsing a batch_size many Examples has a static shape of \[batch_size, None] + shape and the specified dtype. The entries in the batch from different Examples will be padded with default_value to the maximum length present in the batch.
+
+To treat a sparse input as dense, provide allow_missing=True; otherwise, the parse functions will fail on any examples missing this feature.
+
+## tf.parse_single_sequence_example
 ```
-def serialize_example(feature0, feature1, feature2, feature3):
-  """
-  Creates a tf.Example message ready to be written to a file.
-  """
-  
-  # Create a dictionary mapping the feature name to the tf.Example-compatible
-  # data type.
-  
-  feature = {
-      'feature0': _int64_feature(feature0),
-      'feature1': _int64_feature(feature1),
-      'feature2': _bytes_feature(feature2),
-      'feature3': _float_feature(feature3),
-  }
-  
-  # Create a Features message using tf.train.Example.
-  
-  example_proto = tf.train.Example(features=tf.train.Features(feature=feature))
-  return example_proto.SerializeToString()
-```
-To decode the message use the 
-```
-tf.train.Example.FromString(serialized_example)       # from string to protomessages
-protomessage.SerializeToString                        # All the proto messages can 
-                                                        be serialized to binary-string 
+tf.io.parse_single_sequence_example(
+    serialized,
+    context_features=None,
+    sequence_features=None,
+    example_name=None,
+    name=None
+)
 ```
 
 ## tf.train.data.group_by_window
