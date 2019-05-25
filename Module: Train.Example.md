@@ -1,5 +1,28 @@
-# TF features and example and TFRecords
+# Using TFRecords and tf.Example
 [Using TFRecords and tf.Example](https://www.tensorflow.org/tutorials/load_data/tf_records)
+
+The *TFRecord* format is a simple format for storing a sequence of binary records.
+
+Protocol buffers are a cross-platform, cross-language library for efficient serialization of structured data.
+
+The *tf.Example message* (or protobuf) is a flexible message type that represents a {"string": value} mapping. It is designed for use with TensorFlow and is used throughout the higher-level APIs such as TFX.
+
+## tf.Example
+Fundamentally a tf.Example is a
+```
+{"string": tf.train.Feature} 
+```
+mapping.
+
+The *tf.train.Feature* message type can accept one of the following three types (See the .proto file. Most other generic types can be coerced into one of these
+
+
+
+
+
+
+
+
 
 ## tf.FixedLenSequenceFeature
 ```
