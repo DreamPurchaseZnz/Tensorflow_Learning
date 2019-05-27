@@ -1,5 +1,25 @@
 
 # Tensorflow
+## tf.sequence_mask
+```
+tf.sequence_mask(
+    lengths,
+    maxlen=None,
+    dtype=tf.dtypes.bool,
+    name=None)
+```
+Returns a mask tensor representing the first N positions of each cell.
+
+To solve the variable length dataset.
+```
+tf.sequence_mask([1, 3, 2], 5)  # [[True(1), False, False, False, False],
+                                #  [True, True, True(3), False, False],
+                                #  [True, True(2), False, False, False]]
+```
+
+
+
+
 ## tf.stop_gradient
 tf.stop_gradient provides a way to not compute gradient with respect to some variables during back-propagation.
 
